@@ -37,7 +37,7 @@ npm run dev
 ```
 Ở Terminal Frontend: Chạy lệnh 
 ```bash
-npm run dev.
+npm run dev
 ```
 Mở trình duyệt truy cập: http://localhost:5173.
 
