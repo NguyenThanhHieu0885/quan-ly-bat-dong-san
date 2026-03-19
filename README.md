@@ -60,6 +60,7 @@ Thay vì nhét mọi giao diện vào App.jsx, nhóm sẽ chia nhỏ ra:
     App.jsx: Giống như một cái "Bản đồ". Nó dùng thư viện react-router-dom để quy định: "Nếu user gõ URL /khach-hang, hãy hiển thị file DanhSachKhachHang.jsx".
 ```
 ## 🛡️ Quy Trình Làm Việc Với Git 
+👉 **BẮT BUỘC ĐỌC KỸ:** Để biết cách đặt tên nhánh, cách viết commit và luồng gõ lệnh hàng ngày, toàn bộ team vui lòng đọc file [GIT_RULES.md] trước khi gõ dòng code đầu tiên!
 Tuyệt đối không push thẳng lên nhánh main.
 Trước khi code, hãy tạo nhánh mới: git checkout -b ten-tinh-nang
 Code xong, lưu và đẩy lên:
@@ -68,4 +69,4 @@ Code xong, lưu và đẩy lên:
     git commit -m "Mô tả việc vừa làm"
     git push origin ten-tinh-nang
 ```
-Lên GitHub tạo Pull Request (PR) và nhờ các thành viên khác duyệt để gộp vào main
+Lên GitHub tạo Pull Request (PR) để gộp vào dev
