@@ -1,121 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ConfigProvider } from 'antd';
+import AdminLayout from './components/AdminLayout';
+import KhachHang from './pages/KhachHang';
+
+// --- Các Component giả lập ---
+const Login = () => {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#f0f2f5' }}>
+      <div style={{ padding: 40, background: 'white', borderRadius: 8, textAlign: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+        <h2>ĐĂNG NHẬP HỆ THỐNG</h2>
+        <p>(Chỗ này sau này Hiếu sẽ gắn Form Ant Design vào)</p>
+        <button onClick={() => window.location.href = '/'}>
+          Bấm tạm vào đây để giả vờ Đăng nhập thành công
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const TongQuan = () => <h2>Trang Tổng Quan (Thống kê doanh thu, số lượng BĐS...)</h2>;
+
+const NhanVien = () => <h2>Trang Quản lý Nhân Viên</h2>;
+const BatDongSan = () => <h2>Trang Quản lý Bất Động Sản</h2>;
+const HopDongKyGui = () => <h2>Trang HĐ Ký Gửi</h2>;
+const HopDongDatCoc = () => <h2>Trang HĐ Đặt Cọc</h2>;
+const HopDongChuyenNhuong = () => <h2>Trang HĐ Chuyển Nhượng</h2>;
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <ConfigProvider theme={{ token: { colorPrimary: '#1677ff', colorBgContainer: '#ffffff', borderRadius: 6 }}}>
+      <BrowserRouter>
+        <Routes>
+          {/* THẾ GIỚI BÊN NGOÀI: Trang Login đứng độc lập, không có Sidebar */}
+          <Route path="/login" element={<Login />} />
 
-      <div className="ticks"></div>
+          {/* THẾ GIỚI BÊN TRONG: Bọc bởi AdminLayout */}
+          <Route path="/" element={<AdminLayout />}>
+            {/* Vừa đăng nhập xong (đường dẫn /) sẽ tự động vào trang Tổng Quan */}
+            <Route index element={<TongQuan />} />
+            
+            {/* 6 Usecase của nhóm */}
+            <Route path="khach-hang" element={<KhachHang />} />
+            <Route path="nhan-vien" element={<NhanVien />} />
+            <Route path="bat-dong-san" element={<BatDongSan />} />
+            <Route path="hop-dong-ky-gui" element={<HopDongKyGui />} />
+            <Route path="hop-dong-dat-coc" element={<HopDongDatCoc />} />
+            <Route path="hop-dong-chuyen-nhuong" element={<HopDongChuyenNhuong />} />
+          </Route>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+          {/* Nếu user gõ bậy bạ một đường link không tồn tại, tự động đá về trang chủ */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </ConfigProvider>
+  );
 }
 
-export default App
+export default App;
