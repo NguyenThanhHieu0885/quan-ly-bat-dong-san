@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import AdminLayout from './components/AdminLayout';
-import KhachHang from './pages/KhachHang';
+import QuanLyNhanVien from './pages/QuanLyNhanVien';
 
 // --- Các Component giả lập ---
 const Login = () => {
@@ -21,7 +21,7 @@ const Login = () => {
 
 const TongQuan = () => <h2>Trang Tổng Quan (Thống kê doanh thu, số lượng BĐS...)</h2>;
 
-const NhanVien = () => <h2>Trang Quản lý Nhân Viên</h2>;
+const KhachHang = () => <h2>Trang Quản lý Khách Hàng</h2>;
 const BatDongSan = () => <h2>Trang Quản lý Bất Động Sản</h2>;
 const HopDongKyGui = () => <h2>Trang HĐ Ký Gửi</h2>;
 const HopDongDatCoc = () => <h2>Trang HĐ Đặt Cọc</h2>;
@@ -42,7 +42,7 @@ function App() {
             
             {/* 6 Usecase của nhóm */}
             <Route path="khach-hang" element={<KhachHang />} />
-            <Route path="nhan-vien" element={<NhanVien />} />
+            <Route path="nhan-vien" element={<QuanLyNhanVien />} />
             <Route path="bat-dong-san" element={<BatDongSan />} />
             <Route path="hop-dong-ky-gui" element={<HopDongKyGui />} />
             <Route path="hop-dong-dat-coc" element={<HopDongDatCoc />} />
