@@ -1,6 +1,6 @@
 // File: backend/models/NhanVien.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); // File cấu hình DB của Diệp Lân
+const sequelize = require('../config/db'); 
 
 const NhanVien = sequelize.define('NhanVien', {
   nvid: {
@@ -17,11 +17,11 @@ const NhanVien = sequelize.define('NhanVien', {
   gioitinh: { type: DataTypes.BOOLEAN }, // 1: Nam, 0: Nữ
   doanhthu: { type: DataTypes.FLOAT, defaultValue: 0 },
   email: { type: DataTypes.STRING(100) },
-  quyen: { type: DataTypes.BOOLEAN, defaultValue: false }, // 0: Nhân viên, 1: Quản lý
-  trangthai: { type: DataTypes.BOOLEAN, defaultValue: true } // 1: Đang làm, 0: Nghỉ việc
+  quyen: { type: DataTypes.BOOLEAN, defaultValue: false }, // 1: Quản lý, 0: Nhân viên
+  trangthai: { type: DataTypes.BOOLEAN, defaultValue: true } // 1: Đang làm, 0: Nghỉ
 }, {
   tableName: 'nhanvien',
-  timestamps: false // Bỏ qua createdAt, updatedAt
+  timestamps: false 
 });
 
 module.exports = NhanVien;
