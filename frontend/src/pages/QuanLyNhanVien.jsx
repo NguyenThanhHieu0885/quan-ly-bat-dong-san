@@ -17,17 +17,29 @@ const QuanLyNhanVien = () => {
     setLoading(true);
     try {
       const res = await axios.get(`http://localhost:3000/api/nhanvien?keyword=${keyword}`);
-      setData(res.data); 
+      setData(res.data);
+      return res.data;
     } catch (error) {
       message.error('Lỗi kết nối máy chủ');
+      return [];
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => { fetchData(); }, []);
 
-  const handleSearch = () => {
-    fetchData(searchText);
+  const handleSearch = async () => {
+    const keyword = searchText.trim();
+    if (!keyword) {
+      message.warning('Vui lòng nhập thông tin cần tra cứu!');
+      return;
+    }
+
+    const result = await fetchData(keyword);
+    if (Array.isArray(result) && result.length === 0) {
+      message.warning('Không tồn tại thông tin Nhân Viên');
+    }
   };
 
   const openModal = (record = null) => {
@@ -46,7 +58,7 @@ const QuanLyNhanVien = () => {
 
   const handleSave = async () => {
     try {
-      const values = await form.validateFields();
+      const values = await form.validateFields(); 
       
       const submitData = {
         ...values,
@@ -63,25 +75,28 @@ const QuanLyNhanVien = () => {
       setIsModalVisible(false);
       fetchData();
     } catch (error) {
-      if(error.response) message.error(error.response.data.message);
+      if(error.response && error.response.data) {
+        message.error(error.response.data.message);
+      }
     }
   };
 
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/api/nhanvien/${id}`);
-      message.success('Đã chuyển trạng thái nhân viên thành Nghỉ việc!');
+      message.success('Xóa nhân viên thành công!');
       fetchData();
     } catch (error) {
-      if(error.response) message.error(error.response.data.message);
+      if(error.response && error.response.data) {
+        message.error(error.response.data.message);
+      }
     }
   };
 
-  // ĐÃ BỔ SUNG 3 CỘT: Mật khẩu, Ngày sinh, Địa chỉ
   const columns = [
     { title: 'Mã NV', dataIndex: 'nvid', key: 'nvid', width: 70, fixed: 'left' },
     { title: 'Tài khoản', dataIndex: 'taikhoan', key: 'taikhoan', width: 100, fixed: 'left' },
-    { title: 'Mật khẩu', dataIndex: 'matkhau', key: 'matkhau', width: 100, render: (val) => val }, // Có thể đổi thành '******' nếu muốn bảo mật
+    { title: 'Mật khẩu', dataIndex: 'matkhau', key: 'matkhau', width: 100 },
     { title: 'Tên NV', dataIndex: 'tennv', key: 'tennv', width: 150 },
     { title: 'Ngày sinh', dataIndex: 'ngaysinh', key: 'ngaysinh', width: 120, render: (val) => val ? dayjs(val).format('DD/MM/YYYY') : '' },
     { title: 'Giới tính', dataIndex: 'gioitinh', key: 'gioitinh', width: 90, render: (val) => val ? 'Nam' : 'Nữ' },
@@ -99,8 +114,8 @@ const QuanLyNhanVien = () => {
       render: (_, record) => (
         <Space size="middle">
           <Button icon={<EditOutlined />} onClick={() => openModal(record)} type="link" />
-          <Popconfirm title="Bạn có chắc chắn muốn cho nhân viên này nghỉ việc?" onConfirm={() => handleDelete(record.nvid)}>
-            <Button icon={<DeleteOutlined />} type="link" danger disabled={!record.trangthai} />
+          <Popconfirm title="Bạn có chắc chắn muốn xóa nhân viên này?" onConfirm={() => handleDelete(record.nvid)}>
+            <Button icon={<DeleteOutlined />} type="link" danger />
           </Popconfirm>
         </Space>
       ),
@@ -118,49 +133,55 @@ const QuanLyNhanVien = () => {
         </Space>
       }
     >
-      {/* Tăng scroll x lên 1800 để chứa đủ các cột mà không bị co dúm lại */}
       <Table dataSource={data} columns={columns} rowKey="nvid" loading={loading} scroll={{ x: 1800 }} />
 
       <Modal title={editingId ? "Cập Nhật Nhân Viên" : "Thêm Nhân Viên Mới"} open={isModalVisible} onOk={handleSave} onCancel={() => setIsModalVisible(false)} width={800} okText="Lưu" cancelText="Hủy">
         <Form form={form} layout="vertical">
           <Row gutter={16}>
             <Col span={12}>
+              {/* ĐÃ BỎ CHẶN SỬA TÀI KHOẢN */}
               <Form.Item name="taikhoan" label="Tài khoản" rules={[{ required: true, message: 'Vui lòng nhập tài khoản!' }]}>
-                <Input disabled={!!editingId} /> 
+                <Input /> 
               </Form.Item>
             </Col>
             <Col span={12}>
-              {/* Cho phép sửa mật khẩu nếu cần */}
-              <Form.Item name="matkhau" label="Mật khẩu" rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}>
-                <Input.Password />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item name="tennv" label="Tên nhân viên" rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}>
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name="sdt" label="Số điện thoại">
-                <Input />
+              <Form.Item name="matkhau" label="Mật khẩu" rules={[{ required: !editingId, message: 'Vui lòng nhập mật khẩu!' }]}>
+                <Input.Password placeholder={editingId ? "Bỏ trống nếu không đổi mật khẩu" : ""} />
               </Form.Item>
             </Col>
           </Row>
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="ngaysinh" label="Ngày sinh">
+              <Form.Item name="tennv" label="Tên nhân viên" rules={[{ required: true, message: 'Vui lòng nhập tên nhân viên!' }]}>
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="sdt"
+                label="Số điện thoại"
+                rules={[
+                  { required: true, message: 'Vui lòng nhập số điện thoại!' },
+                  { pattern: /^\d{10}$/, message: 'Số điện thoại phải gồm 10 chữ số!' }
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="ngaysinh" label="Ngày sinh" rules={[{ required: true, message: 'Vui lòng chọn ngày sinh!' }]}>
                 <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="gioitinh" label="Giới tính" initialValue={1}>
+              <Form.Item name="gioitinh" label="Giới tính" rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]} initialValue={true}>
                 <Select>
-                  <Select.Option value={1}>Nam</Select.Option>
-                  <Select.Option value={0}>Nữ</Select.Option>
+                  <Select.Option value={true}>Nam</Select.Option>
+                  <Select.Option value={false}>Nữ</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -168,7 +189,7 @@ const QuanLyNhanVien = () => {
 
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item name="diachi" label="Địa chỉ">
+              <Form.Item name="diachi" label="Địa chỉ" rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}>
                 <Input.TextArea rows={2} />
               </Form.Item>
             </Col>
@@ -176,23 +197,31 @@ const QuanLyNhanVien = () => {
 
           <Row gutter={16}>
             <Col span={8}>
-              <Form.Item name="email" label="Email">
-                <Input type="email" />
+              {/* ĐÃ BỔ SUNG KIỂM TRA ĐỊNH DẠNG EMAIL */}
+              <Form.Item 
+                name="email" 
+                label="Email" 
+                rules={[
+                  { required: true, message: 'Vui lòng nhập email!' },
+                  { type: 'email', message: 'Email không đúng định dạng (VD: abc@gmail.com)!' }
+                ]}
+              >
+                <Input placeholder="VD: nguyenvan@gmail.com" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="quyen" label="Phân quyền" initialValue={0}>
+              <Form.Item name="quyen" label="Phân quyền" rules={[{ required: true, message: 'Vui lòng chọn phân quyền!' }]} initialValue={false}>
                 <Select>
-                  <Select.Option value={0}>Nhân viên Sales</Select.Option>
-                  <Select.Option value={1}>Quản lý</Select.Option>
+                  <Select.Option value={false}>Nhân viên Sales</Select.Option>
+                  <Select.Option value={true}>Quản lý</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="trangthai" label="Trạng thái" initialValue={1}>
+              <Form.Item name="trangthai" label="Trạng thái" rules={[{ required: true, message: 'Vui lòng chọn trạng thái!' }]} initialValue={true}>
                 <Select>
-                  <Select.Option value={1}>Đang làm</Select.Option>
-                  <Select.Option value={0}>Nghỉ việc</Select.Option>
+                  <Select.Option value={true}>Đang làm</Select.Option>
+                  <Select.Option value={false}>Nghỉ việc</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
