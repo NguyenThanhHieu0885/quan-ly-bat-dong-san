@@ -34,7 +34,7 @@ export default function AdminLayout() {
     { key: "/", icon: <DashboardOutlined />, label: "Tổng quan" },
     { key: "/nhan-vien", icon: <UserOutlined />, label: "Nhân viên", adminonly: true },
     { key: "/khach-hang", icon: <UserOutlined />, label: "Khách hàng" },
-    { key: "/bat-dong-san", icon: <HomeOutlined />, label: "Bất động sản" },
+    { key: "/danh-sach-bds", icon: <HomeOutlined />, label: "Bất động sản" },
     { key: "/bat-dong-san/add", icon: <PlusCircleOutlined />, label: "Thêm mới" },
     { key: "/hop-dong-ky-gui", icon: <FileTextOutlined />, label: "HĐ ký gửi" },
     { key: "/hop-dong-dat-coc", icon: <FileTextOutlined />, label: "HĐ đặt cọc" },

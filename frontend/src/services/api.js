@@ -13,4 +13,8 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// APIs cho bất động sản
+export const getBatDongSan = () => api.get("/batdongsan");
+export const getChiTietBDS = (id) => api.get(`/batdongsan/${id}`);
+
 export default api;

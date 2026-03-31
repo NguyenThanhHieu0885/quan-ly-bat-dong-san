@@ -2,13 +2,13 @@ const dayjs = require('dayjs');
 const { Op, Sequelize } = require('sequelize');
 const KhachHang = require('../models/KhachHang');
 
-// Import an toàn với cơ chế fallback
-let BatDongSan, HopDong;
+// Import an toàn theo từng model để không ảnh hưởng lẫn nhau
+let BatDongSan;
+
 try {
     BatDongSan = require('../models/BatDongSan');
-    HopDong = require('../models/HopDong');
 } catch (e) {
-    console.warn(">>> Cảnh báo: Thiếu Model liên quan, một số ràng buộc xóa sẽ bị bỏ qua.");
+    console.warn(">>> Cảnh báo: Không tải được model BatDongSan, sẽ bỏ qua kiểm tra BĐS ký gửi khi ngưng khách.");
 }
 
 // --- CẤU CỨU HÀM VALIDATE (SẠCH & GỌN) ---
@@ -99,9 +99,6 @@ exports.deleteKhachHang = async (req, res) => {
         // Kiểm tra ràng buộc dữ liệu trước khi ngưng hoạt động
         if (BatDongSan && await BatDongSan.findOne(checkOptions)) 
             return res.status(400).json({ message: 'Khách đang có BĐS ký gửi, không thể ngưng!' });
-        
-        if (HopDong && await HopDong.findOne(checkOptions)) 
-            return res.status(400).json({ message: 'Khách đang có hợp đồng, không thể ngưng!' });
 
         await KhachHang.update({ trangthai: 0 }, { where: { khid: id } });
         res.json({ message: 'Đã chuyển sang Ngưng hoạt động' });

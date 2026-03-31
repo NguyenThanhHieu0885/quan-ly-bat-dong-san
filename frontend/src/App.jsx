@@ -1,6 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import AdminLayout from "./layouts/AdminLayout";
+// --- Import các trang quản lý chính ---
+// import của Hiếu
+import QuanLyNhanVien from './pages/QuanLyNhanVien';
+// import của Phương Minh
+import DanhSachBDS from './pages/DanhSachBDS';
+// import của Lân
 import KhachHang from "./pages/khachhang/KhachHang";
 import AddKhachHang from "./pages/khachhang/AddKhachHang";
 import Login from "./pages/auth/Login";
@@ -46,10 +52,17 @@ function App() {
             <Route path="khach-hang/add" element={<AddKhachHang />} />
 
             {/* MODULE NHAN VIEN (ADMIN ONLY) */}
-            <Route path="nhan-vien" element={<RoleRoute allow={["admin"]}><Placeholder title="Quản lý Nhân viên" /></RoleRoute>} />
+            <Route
+              path="nhan-vien"
+              element={
+                <RoleRoute allow={["admin"]}>
+                  <QuanLyNhanVien />
+                </RoleRoute>
+              }
+            />
 
             {/* CÁC MODULE KHÁC */}
-            <Route path="bat-dong-san" element={<Placeholder title="Quản lý Bất động sản" />} />
+            <Route path="danh-sach-bds" element={<DanhSachBDS />} />
             <Route path="hop-dong-ky-gui" element={<Placeholder title="Hợp đồng Ký gửi" />} />
             <Route path="hop-dong-dat-coc" element={<Placeholder title="Hợp đồng Đặt cọc" />} />
             <Route path="hop-dong-chuyen-nhuong" element={<Placeholder title="Hợp đồng Chuyển nhượng" />} />
