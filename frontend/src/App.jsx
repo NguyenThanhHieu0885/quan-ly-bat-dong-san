@@ -5,10 +5,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/danh-sach-bds" replace />} />
         <Route path="/danh-sach-bds" element={<DanhSachBDS />} />
-        <Route path="/bat-dong-san" element={<DanhSachBDS />} />
-        <Route path="*" element={<Navigate to="/danh-sach-bds" replace />} />
       </Routes>
     </Router>
   );

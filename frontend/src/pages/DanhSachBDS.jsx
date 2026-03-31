@@ -83,7 +83,7 @@ const DanhSachBDS = () => {
           </Button>
 
           <Button
-            style={{ backgroundColor: "#ffc107", color: "#000" }} 
+            style={{ backgroundColor: "#77d4a9", color: "#000" }} 
             onClick={() => handleEdit(record)}
           >
             Cập nhật

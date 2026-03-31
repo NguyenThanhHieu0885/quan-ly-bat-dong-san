@@ -1,9 +1,11 @@
-router.get('/:id', async (req, res) => {
-  try {
-    const bds = await BatDongSan.findByPk(req.params.id);
-    if (!bds) return res.status(404).json({ message: "Không tìm thấy bất động sản" });
-    res.json(bds);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+const express = require('express');
+const router = express.Router();
+const bdsController = require('../controllers/batDongSanControllers');
+
+router.get('/', bdsController.getAllBDS);
+router.get('/tra-cuu', bdsController.traCuuBDS);
+router.get('/hinh-anh/:id', bdsController.getHinhAnhBDS);
+router.get('/:id', bdsController.getBDSById);
+router.put('/:id', bdsController.updateBDS); 
+
+module.exports = router;
