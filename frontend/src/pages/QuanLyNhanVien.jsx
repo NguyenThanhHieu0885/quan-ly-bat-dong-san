@@ -6,6 +6,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 
 const QuanLyNhanVien = () => {
+  // State và form phục vụ quản lý danh sách, loading, modal và chế độ chỉnh sửa
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -14,6 +15,7 @@ const QuanLyNhanVien = () => {
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
 
+  // Tải danh sách nhân viên (có hỗ trợ tìm kiếm theo keyword)
   const fetchData = async (keyword = "") => {
     setLoading(true);
     try {
@@ -28,18 +30,22 @@ const QuanLyNhanVien = () => {
     }
   };
 
+  // Lấy dữ liệu lần đầu khi mở trang
   useEffect(() => { fetchData(); }, []);
 
+  // Mở modal tra cứu và reset form tìm kiếm
   const openSearchModal = () => {
     searchForm.resetFields();
     setIsSearchModalVisible(true);
   };
 
+  // Đóng modal tra cứu và reset form
   const closeSearchModal = () => {
     setIsSearchModalVisible(false);
     searchForm.resetFields();
   };
 
+  // Xử lý tra cứu nhân viên theo từ khóa nhập vào
   const handleSearch = async () => {
     try {
       const { keyword } = await searchForm.validateFields();
@@ -58,6 +64,7 @@ const QuanLyNhanVien = () => {
     }
   };
 
+  // Mở modal thêm/sửa; nếu có record thì nạp dữ liệu để chỉnh sửa
   const openModal = (record = null) => {
     setIsModalVisible(true);
     if (record) {
@@ -72,6 +79,7 @@ const QuanLyNhanVien = () => {
     }
   };
 
+  // Lưu nhân viên (thêm mới hoặc cập nhật) rồi tải lại danh sách
   const handleSave = async () => {
     try {
       const values = await form.validateFields(); 
@@ -97,6 +105,7 @@ const QuanLyNhanVien = () => {
     }
   };
 
+  // Xóa nhân viên theo id và tải lại danh sách
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/api/nhanvien/${id}`);
@@ -109,6 +118,7 @@ const QuanLyNhanVien = () => {
     }
   };
 
+  // Cấu hình các cột hiển thị trên bảng nhân viên
   const columns = [
     { title: 'Mã NV', dataIndex: 'nvid', key: 'nvid', width: 70, fixed: 'left' },
     { title: 'Tài khoản', dataIndex: 'taikhoan', key: 'taikhoan', width: 100, fixed: 'left' },
@@ -148,13 +158,15 @@ const QuanLyNhanVien = () => {
         </Space>
       }
     >
+      {/* Bảng danh sách nhân viên */}
       <Table dataSource={data} columns={columns} rowKey="nvid" loading={loading} scroll={{ x: 1800 }} />
 
+      {/* Modal thêm/sửa nhân viên */}
       <Modal title={editingId ? "Cập Nhật Nhân Viên" : "Thêm Nhân Viên Mới"} open={isModalVisible} onOk={handleSave} onCancel={() => setIsModalVisible(false)} width={800} okText="Lưu" cancelText="Hủy">
         <Form form={form} layout="vertical">
           <Row gutter={16}>
             <Col span={12}>
-              {/* ĐÃ BỎ CHẶN SỬA TÀI KHOẢN */}
+              {/* Trường tài khoản (cho phép sửa khi edit) */}
               <Form.Item name="taikhoan" label="Tài khoản" rules={[{ required: true, message: 'Vui lòng nhập tài khoản!' }]}>
                 <Input /> 
               </Form.Item>
@@ -212,7 +224,7 @@ const QuanLyNhanVien = () => {
 
           <Row gutter={16}>
             <Col span={8}>
-              {/* ĐÃ BỔ SUNG KIỂM TRA ĐỊNH DẠNG EMAIL */}
+              {/* Trường email kèm kiểm tra định dạng */}
               <Form.Item 
                 name="email" 
                 label="Email" 
@@ -245,6 +257,7 @@ const QuanLyNhanVien = () => {
         </Form>
       </Modal>
 
+      {/* Modal tra cứu nhân viên */}
       <Modal
         title="Tra Cứu Nhân Viên"
         open={isSearchModalVisible}
