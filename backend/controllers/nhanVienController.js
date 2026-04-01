@@ -1,6 +1,7 @@
 // File: backend/controllers/nhanVienController.js
 const NhanVien = require('../models/NhanVien');
-const sequelize = require('../config/db'); // Import kết nối DB để dùng query thuần cho lệnh phức tạp
+// Lấy đúng instance sequelize để dùng query() và hằng số QueryTypes
+const { sequelize, Sequelize } = require('../config/db');
 
 exports.getAllNhanVien = async (req, res) => {
   try {
@@ -85,7 +86,7 @@ exports.deleteNhanVien = async (req, res) => {
        FROM batdongsan b 
        JOIN khachhang kh ON b.khid = kh.khid 
        WHERE kh.nvid = :id`,
-      { replacements: { id }, type: sequelize.QueryTypes.SELECT }
+      { replacements: { id }, type: Sequelize.QueryTypes.SELECT }
     );
     if (checkBDS[0].count > 0) {
       return res.status(400).json({ message: "Không thể xóa! Nhân viên này đang phụ trách Bất động sản của khách hàng." });
@@ -97,7 +98,7 @@ exports.deleteNhanVien = async (req, res) => {
        FROM hopdongkygui kg 
        JOIN khachhang kh ON kg.khid = kh.khid 
        WHERE kh.nvid = :id`,
-      { replacements: { id }, type: sequelize.QueryTypes.SELECT }
+      { replacements: { id }, type: Sequelize.QueryTypes.SELECT }
     );
     if (checkKyGui[0].count > 0) {
       return res.status(400).json({ message: "Không thể xóa! Nhân viên đang phụ trách khách hàng có Hợp đồng ký gửi." });
@@ -109,7 +110,7 @@ exports.deleteNhanVien = async (req, res) => {
        FROM hopdongchuyennhuong cn 
        JOIN khachhang kh ON cn.khid = kh.khid 
        WHERE kh.nvid = :id`,
-      { replacements: { id }, type: sequelize.QueryTypes.SELECT }
+      { replacements: { id }, type: Sequelize.QueryTypes.SELECT }
     );
     if (checkChuyenNhuong[0].count > 0) {
       return res.status(400).json({ message: "Không thể xóa! Nhân viên đang phụ trách khách hàng có Hợp đồng chuyển nhượng." });
