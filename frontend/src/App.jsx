@@ -12,6 +12,7 @@ import AddKhachHang from "./pages/khachhang/AddKhachHang";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
+import HopDongChuyenNhuong from "./pages/HopDongChuyenNhuong";
 
 // ===== AUTH CHECK =====
 const isAuthenticated = () => !!localStorage.getItem("token");
@@ -65,7 +66,7 @@ function App() {
             <Route path="danh-sach-bds" element={<DanhSachBDS />} />
             <Route path="hop-dong-ky-gui" element={<Placeholder title="Hợp đồng Ký gửi" />} />
             <Route path="hop-dong-dat-coc" element={<Placeholder title="Hợp đồng Đặt cọc" />} />
-            <Route path="hop-dong-chuyen-nhuong" element={<Placeholder title="Hợp đồng Chuyển nhượng" />} />
+            <Route path="hop-dong-chuyen-nhuong" element={<HopDongChuyenNhuong />} />
           </Route>
 
           {/* FALLBACK */}

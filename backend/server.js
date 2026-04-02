@@ -6,6 +6,7 @@ const { sequelize } = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 // Hiếu
 const nhanVienRoutes = require('./routes/nhanVienRoutes');
+const hdChuyenNhuongRoutes = require('./routes/hdChuyenNhuongRoutes');
 // Phương Minh
 const batDongSanRoutes = require('./routes/batdongsan'); 
 // Lân
@@ -28,6 +29,7 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', db: 'connected' })
 // --- 3. ĐỊNH NGHĨA API ROUTES ---
 app.use('/api/auth', authRoutes);
 app.use('/api/nhanvien', nhanVienRoutes);
+app.use('/api/hdchuyennhuong', hdChuyenNhuongRoutes);
 app.use('/api/batdongsan', batDongSanRoutes);
 app.use('/api/khachhang', khachHangRoutes);
 
