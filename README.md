@@ -27,7 +27,7 @@ PORT=3000
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=
-DB_NAME=qlbds_db
+DB_NAME=quanlybatdongsan
 ```
 ### Bước 4: Khởi động dự án
 Ở Terminal Backend: Chạy lệnh 
