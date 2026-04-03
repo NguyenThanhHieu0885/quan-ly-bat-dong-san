@@ -12,6 +12,10 @@ import AddKhachHang from "./pages/khachhang/AddKhachHang";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
+// --- Import của Nam (module Ký Gửi) ---
+import TaoKyGui from './pages/kygui/TaoKyGui';
+import QuanLyKyGui from './pages/kygui/QuanLyKyGui';
+import SuaKyGui from './pages/kygui/SuaKyGui';
 
 // ===== AUTH CHECK =====
 const isAuthenticated = () => !!localStorage.getItem("token");
@@ -63,7 +67,13 @@ function App() {
 
             {/* CÁC MODULE KHÁC */}
             <Route path="danh-sach-bds" element={<DanhSachBDS />} />
-            <Route path="hop-dong-ky-gui" element={<Placeholder title="Hợp đồng Ký gửi" />} />
+            <Route path="bat-dong-san/add" element={<Placeholder title="Thêm Bất Động Sản" />} />
+            
+            {/* Thay thế Placeholder bằng các Route thực tế của module Ký Gửi */}
+            <Route path="quan-ly-ky-gui" element={<QuanLyKyGui />} />
+            <Route path="tao-ky-gui" element={<TaoKyGui />} />
+            <Route path="sua-ky-gui/:id" element={<SuaKyGui />} />
+            
             <Route path="hop-dong-dat-coc" element={<Placeholder title="Hợp đồng Đặt cọc" />} />
             <Route path="hop-dong-chuyen-nhuong" element={<Placeholder title="Hợp đồng Chuyển nhượng" />} />
           </Route>

@@ -1,6 +1,7 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require('sequelize'); // Tránh lỗi "Sequelize is not defined"
 require('dotenv').config();
 
+// --- Cấu hình kết nối CSDL chính bằng Sequelize ---
 const sequelize = new Sequelize(
   process.env.DB_NAME, 
   process.env.DB_USER, 
@@ -12,5 +13,5 @@ const sequelize = new Sequelize(
   }
 );
 
-// Export cả instance (sequelize) và thư viện (Sequelize)
+// Gom chung toàn bộ Export để hệ thống không bị lỗi
 module.exports = { sequelize, Sequelize };
