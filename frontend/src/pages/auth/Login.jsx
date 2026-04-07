@@ -28,7 +28,7 @@ export default function Login() {
       localStorage.setItem("role", res.data.user.role);
       message.success("Đăng nhập thành công");
       navigate("/");
-      
+      window.location.reload();
     } catch (err) {
       message.error("Sai tài khoản hoặc mật khẩu");
     } finally {

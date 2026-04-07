@@ -13,15 +13,22 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Kiểm tra dữ liệu an toàn - Không bao giờ để crash ở đây
+  // --- 1. XỬ LÝ DỮ LIỆU USER AN TOÀN ---
   const userStr = localStorage.getItem("user");
-  let userData = { email: "Admin", role: "admin" };
+  const roleStored = localStorage.getItem("role"); 
   
+  let userData = { 
+    tennv: "Người dùng", 
+    role: roleStored || "guest" 
+  };
+
   if (userStr) {
     try {
-      userData = JSON.parse(userStr);
+      const parsed = JSON.parse(userStr);
+      // Gộp dữ liệu từ object user và key role bên ngoài vào một chỗ cho chắc chắn
+      userData = { ...parsed, role: roleStored || parsed.role || "guest" };
     } catch (e) {
-      console.error("Dữ liệu user sai định dạng");
+      console.error("Dữ liệu user bị lỗi định dạng JSON");
     }
   }
 
@@ -30,11 +37,12 @@ export default function AdminLayout() {
     navigate("/login");
   };
 
+  // --- 2. DANH SÁCH MENU (Cập nhật đường dẫn chuẩn) ---
   const menuItems = [
     { key: "/", icon: <DashboardOutlined />, label: "Tổng quan" },
     { key: "/nhan-vien", icon: <UserOutlined />, label: "Nhân viên", adminonly: true },
     { key: "/khach-hang", icon: <UserOutlined />, label: "Khách hàng" },
-    { key: "/danh-sach-bds", icon: <HomeOutlined />, label: "Bất động sản" },
+    { key: "/bat-dong-san", icon: <HomeOutlined />, label: "Bất động sản" },
     { key: "/bat-dong-san/add", icon: <PlusCircleOutlined />, label: "Thêm mới" },
     { key: "/hop-dong-ky-gui", icon: <FileTextOutlined />, label: "HĐ ký gửi" },
     { key: "/hop-dong-dat-coc", icon: <FileTextOutlined />, label: "HĐ đặt cọc" },
@@ -53,7 +61,8 @@ export default function AdminLayout() {
           <Space>
             <Avatar size={40} icon={<UserOutlined />} style={{ backgroundColor: "#e6f4ff" }} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <Text strong>{userData.email?.split('@')[0] || "User"}</Text>
+              {/* Hiển thị tên nhân viên hoặc phần trước @ của email */}
+              <Text strong>{userData.tennv || userData.email?.split('@')[0] || "User"}</Text>
               <Tag 
                 color={userData.role === 'admin' ? 'red' : 'blue'} 
                 style={{ width: 'fit-content', marginTop: 4, textTransform: 'capitalize' }}
@@ -68,6 +77,7 @@ export default function AdminLayout() {
           <Menu
             mode="inline"
             selectedKeys={[location.pathname]}
+            // Lọc menu: chỉ admin mới thấy những mục adminonly
             items={menuItems.filter(i => !i.adminonly || (i.adminonly && userData.role === 'admin'))}
             onClick={({ key }) => navigate(key)}
             style={{ border: "none" }}
