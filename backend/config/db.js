@@ -7,8 +7,10 @@ const sequelize = new Sequelize(
   process.env.DB_PASSWORD, 
   {
     host: process.env.DB_HOST,
-    dialect: 'mysql'
+    dialect: 'mysql',
+    logging: false 
   }
 );
 
-module.exports = sequelize;
+// Export cả instance (sequelize) và thư viện (Sequelize)
+module.exports = { sequelize, Sequelize };
