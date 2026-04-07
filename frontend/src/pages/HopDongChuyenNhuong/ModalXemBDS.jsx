@@ -21,13 +21,24 @@ const ModalXemBDS = ({ open, bdsid, onClose }) => {
     <Modal title="Thông tin chi tiết Bất Động Sản" open={open} onCancel={onClose} footer={null} width={600}>
       <Spin spinning={loading}>
         {bdsInfo ? (
-          <Descriptions bordered column={1}>
+          <Descriptions bordered column={2}>
             <Descriptions.Item label="Mã BĐS">{bdsInfo.bdsid}</Descriptions.Item>
-            <Descriptions.Item label="Mã số QSDD">{bdsInfo.masoqsdd}</Descriptions.Item>
+            <Descriptions.Item label="Loại BĐS (ID)">{bdsInfo.loaiid}</Descriptions.Item>
+            <Descriptions.Item label="Mã Khách Hàng (ID)">{bdsInfo.khid}</Descriptions.Item>
+            <Descriptions.Item label="Tình trạng">{bdsInfo.tinhtrang}</Descriptions.Item>
             <Descriptions.Item label="Diện tích">{bdsInfo.dientich} m2</Descriptions.Item>
             <Descriptions.Item label="Đơn giá">{bdsInfo.dongia?.toLocaleString()} đ</Descriptions.Item>
-            <Descriptions.Item label="Địa chỉ">{`${bdsInfo.sonha} ${bdsInfo.tenduong}, ${bdsInfo.phuong}, ${bdsInfo.quan}, ${bdsInfo.thanhpho}`}</Descriptions.Item>
+            <Descriptions.Item label="Mã số QSDD">{bdsInfo.masoqsdd}</Descriptions.Item>
             <Descriptions.Item label="Mô tả">{bdsInfo.mota}</Descriptions.Item>
+            <Descriptions.Item label="Hình ảnh">{bdsInfo.hinhanh ? 'Có' : 'Không'}</Descriptions.Item>
+            <Descriptions.Item label="Chiều dài">{bdsInfo.chieudai}</Descriptions.Item>
+            <Descriptions.Item label="Chiều rộng">{bdsInfo.chieurong}</Descriptions.Item>
+            <Descriptions.Item label="Huê hồng">{bdsInfo.huehong}</Descriptions.Item>
+            <Descriptions.Item label="Số nhà">{bdsInfo.sonha}</Descriptions.Item>
+            <Descriptions.Item label="Tên đường">{bdsInfo.tenduong}</Descriptions.Item>
+            <Descriptions.Item label="Phường">{bdsInfo.phuong}</Descriptions.Item>
+            <Descriptions.Item label="Quận">{bdsInfo.quan}</Descriptions.Item>
+            <Descriptions.Item label="Thành phố">{bdsInfo.thanhpho}</Descriptions.Item>
           </Descriptions>
         ) : (
           <p>Không có dữ liệu</p>

@@ -7,6 +7,20 @@ import dayjs from 'dayjs';
 const ModalThemHD = ({ open, onClose, onSuccess }) => {
   const [form] = Form.useForm();
   const [listDatCoc, setListDatCoc] = useState([]);
+  const formatCurrency = (value) => {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) return '-';
+    return Number(value).toLocaleString('vi-VN');
+  };
+
+  const renderDatCocLabel = (dc) => {
+    const tenKhachHang = dc.tenkhachhang || `KH #${dc.khid}`;
+    const bdsDisplay = dc.masoqsdd
+      ? `${dc.masoqsdd}${dc.diachibds ? ` - ${dc.diachibds}` : ''}`
+      : `BDS #${dc.bdsid}`;
+    const giaTri = formatCurrency(dc.giatri);
+
+    return `HĐ ${dc.dcid} | KH: ${tenKhachHang} | BĐS: ${bdsDisplay} | Cọc: ${giaTri}`;
+  };
 
   useEffect(() => {
     if (open) {
@@ -27,8 +41,14 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
     const selectedDC = listDatCoc.find(item => item.dcid === dcid);
     if (selectedDC) {
       form.setFieldsValue({
+        dcid_lienket: selectedDC.dcid,
         khid: selectedDC.khid,
+        khhoten: selectedDC.tenkhachhang,
+        khsdt: selectedDC.sdtkhachhang,
         bdsid: selectedDC.bdsid,
+        bdsloai: selectedDC.loaibds,
+        bdsdiachi: selectedDC.diachibds,
+        bdsdientich: selectedDC.dientich,
         giatri: selectedDC.giatri // Hoặc có thể cho phép nhập tay
       });
     }
@@ -37,9 +57,13 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
+      const { dcid, khid, bdsid, giatri, ngaylap } = values;
       const submitData = {
-        ...values,
-        ngaylap: values.ngaylap.format('YYYY-MM-DD HH:mm:ss')
+        dcid,
+        khid,
+        bdsid,
+        giatri,
+        ngaylap: ngaylap.format('YYYY-MM-DD HH:mm:ss')
       };
       
       await hdChuyenNhuongService.create(submitData);
@@ -57,17 +81,43 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
         <Form.Item name="dcid" label="Chọn từ Hợp Đồng Đặt Cọc" rules={[{ required: true }]}>
           <Select onChange={handleSelectDatCoc} placeholder="Chọn HĐ Đặt Cọc...">
             {listDatCoc.map(dc => (
-              <Select.Option key={dc.dcid} value={dc.dcid}>Mã HĐ: {dc.dcid}</Select.Option>
+              <Select.Option key={dc.dcid} value={dc.dcid}>
+                {renderDatCocLabel(dc)}
+              </Select.Option>
             ))}
           </Select>
+        </Form.Item>
+
+        <Form.Item name="dcid_lienket" label="Mã HĐ Đặt Cọc liên kết">
+          <Input disabled />
         </Form.Item>
 
         <Form.Item name="khid" label="Mã Khách Hàng (Tự động điền)" rules={[{ required: true }]}>
           <Input disabled />
         </Form.Item>
 
+        <Form.Item name="khhoten" label="Họ tên khách hàng">
+          <Input disabled />
+        </Form.Item>
+
+        <Form.Item name="khsdt" label="SĐT khách hàng">
+          <Input disabled />
+        </Form.Item>
+
         <Form.Item name="bdsid" label="Mã Bất Động Sản (Tự động điền)" rules={[{ required: true }]}>
           <Input disabled />
+        </Form.Item>
+
+        <Form.Item name="bdsloai" label="Loại BĐS (ID)">
+          <Input disabled />
+        </Form.Item>
+
+        <Form.Item name="bdsdiachi" label="Địa chỉ BĐS">
+          <Input disabled />
+        </Form.Item>
+
+        <Form.Item name="bdsdientich" label="Diện tích BĐS (m2)">
+          <InputNumber style={{ width: '100%' }} disabled />
         </Form.Item>
 
         <Form.Item name="giatri" label="Giá trị hợp đồng" rules={[{ required: true }]}>

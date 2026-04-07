@@ -28,8 +28,20 @@ exports.getAll = async (req, res) => {
 exports.getHDDatCocHopLe = async (req, res) => {
   try {
     const sql = `
-      SELECT dc.dcid, dc.khid, dc.bdsid, dc.giatri
+      SELECT 
+        dc.dcid,
+        dc.khid,
+        dc.bdsid,
+        dc.giatri,
+        kh.hoten AS tenkhachhang,
+        kh.sdt AS sdtkhachhang,
+        bds.loaiid AS loaibds,
+        bds.dientich,
+        bds.masoqsdd,
+        CONCAT_WS(', ', bds.sonha, bds.tenduong, bds.phuong, bds.quan, bds.thanhpho) AS diachibds
       FROM hopdongdatcoc dc
+      LEFT JOIN khachhang kh ON dc.khid = kh.khid
+      LEFT JOIN batdongsan bds ON dc.bdsid = bds.bdsid
       LEFT JOIN hopdongchuyennhuong cn ON cn.dcid = dc.dcid
       WHERE cn.dcid IS NULL
       ORDER BY dc.dcid DESC
@@ -47,8 +59,48 @@ exports.create = async (req, res) => {
   try {
     const { khid, bdsid, dcid, giatri, ngaylap } = req.body;
 
-    if (!khid || !bdsid || !dcid || !giatri) {
+    if (!khid || !bdsid || !dcid || !giatri || !ngaylap) {
       return res.status(400).json({ message: "Vui lòng nhập đầy đủ thông tin hợp đồng!" });
+    }
+
+    const giatriNumber = Number(giatri);
+    if (!Number.isFinite(giatriNumber) || giatriNumber <= 0) {
+      return res.status(400).json({ message: "Giá trị hợp đồng không hợp lệ!" });
+    }
+
+    if (Number.isNaN(Date.parse(ngaylap))) {
+      return res.status(400).json({ message: "Ngày lập hợp đồng không hợp lệ!" });
+    }
+
+    // Kiểm tra khách hàng hợp lệ
+    const khachHang = await sequelize.query(
+      `SELECT khid, sdt, trangthai FROM khachhang WHERE khid = :khid`,
+      { replacements: { khid }, type: Sequelize.QueryTypes.SELECT }
+    );
+    if (khachHang.length === 0) {
+      return res.status(400).json({ message: "Khách hàng không tồn tại!" });
+    }
+    if (khachHang[0].trangthai === 0) {
+      return res.status(400).json({ message: "Khách hàng không còn hoạt động!" });
+    }
+    const sdtKhach = (khachHang[0].sdt || '').trim();
+    if (!/^\d{9,15}$/.test(sdtKhach)) {
+      return res.status(400).json({ message: "SĐT khách hàng không hợp lệ!" });
+    }
+
+    // Kiểm tra hợp đồng đặt cọc hợp lệ và chưa được chuyển nhượng
+    const datCoc = await sequelize.query(
+      `SELECT dc.dcid, dc.khid, dc.bdsid
+       FROM hopdongdatcoc dc
+       LEFT JOIN hopdongchuyennhuong cn ON cn.dcid = dc.dcid
+       WHERE dc.dcid = :dcid AND cn.dcid IS NULL`,
+      { replacements: { dcid }, type: Sequelize.QueryTypes.SELECT }
+    );
+    if (datCoc.length === 0) {
+      return res.status(400).json({ message: "Hợp đồng đặt cọc không hợp lệ hoặc đã được chuyển nhượng!" });
+    }
+    if (Number(datCoc[0].khid) !== Number(khid) || Number(datCoc[0].bdsid) !== Number(bdsid)) {
+      return res.status(400).json({ message: "Thông tin khách hàng hoặc bất động sản không khớp HĐ đặt cọc!" });
     }
 
     // Kiểm tra trùng lặp HĐ Đặt cọc (dcid là UNIQUE)
@@ -57,8 +109,15 @@ exports.create = async (req, res) => {
       return res.status(400).json({ message: "Hợp đồng đặt cọc này đã được chuyển nhượng rồi!" });
     }
 
-    // Lưu hợp đồng
-    const newHD = await HopDongChuyenNhuong.create(req.body);
+    // Lưu hợp đồng với trạng thái mặc định
+    const newHD = await HopDongChuyenNhuong.create({
+      khid,
+      bdsid,
+      dcid,
+      giatri: giatriNumber,
+      ngaylap,
+      trangthai: true
+    });
 
     // Cập nhật doanh thu cho nhân viên phụ trách khách hàng này (Ràng buộc số 10 trong PTTK)
     await sequelize.query(
@@ -66,7 +125,7 @@ exports.create = async (req, res) => {
        JOIN khachhang kh ON nv.nvid = kh.nvid 
        SET nv.doanhthu = nv.doanhthu + :giatri 
        WHERE kh.khid = :khid`,
-      { replacements: { giatri, khid }, type: Sequelize.QueryTypes.UPDATE }
+      { replacements: { giatri: giatriNumber, khid }, type: Sequelize.QueryTypes.UPDATE }
     );
 
     res.status(201).json({ message: "Thêm Hợp đồng Chuyển nhượng thành công!", data: newHD });
