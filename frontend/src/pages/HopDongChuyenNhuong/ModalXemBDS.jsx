@@ -1,12 +1,16 @@
 // File: frontend/src/pages/HopDongChuyenNhuong/ModalXemBDS.jsx
+// Import React hooks và các thư viện cần thiết
 import React, { useState, useEffect } from 'react';
 import { Modal, Descriptions, message, Spin } from 'antd';
 import { hdChuyenNhuongService } from '../../services/hdChuyenNhuongService';
 
+// Component modal xem chi tiết thông tin bất động sản
 const ModalXemBDS = ({ open, bdsid, onClose }) => {
+  // State lưu thông tin BĐS và trạng thái tải dữ liệu
   const [bdsInfo, setBdsInfo] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Khi mở modal và có bdsid thì gọi API lấy thông tin BĐS
   useEffect(() => {
     if (open && bdsid) {
       setLoading(true);
@@ -17,9 +21,11 @@ const ModalXemBDS = ({ open, bdsid, onClose }) => {
     }
   }, [open, bdsid]);
 
+  // Giao diện modal hiển thị thông tin chi tiết
   return (
     <Modal title="Thông tin chi tiết Bất Động Sản" open={open} onCancel={onClose} footer={null} width={600}>
       <Spin spinning={loading}>
+        {/* Hiển thị thông tin nếu có dữ liệu, ngược lại báo không có */}
         {bdsInfo ? (
           <Descriptions bordered column={2}>
             <Descriptions.Item label="Mã BĐS">{bdsInfo.bdsid}</Descriptions.Item>
