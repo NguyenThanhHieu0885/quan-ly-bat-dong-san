@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const batDongSanRoutes = require('./routes/batdongsan'); 
+const batDongSanRoutes = require('./routes/batDongSanRoutes'); 
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
