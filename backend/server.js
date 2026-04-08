@@ -6,7 +6,6 @@ const { sequelize } = require('./config/db');
 
 // --- 1. IMPORT CÁC ROUTES (Giữ nguyên của tất cả các bạn) ---
 const authRoutes = require('./routes/authRoutes');
-const khachHangRoutes = require('./routes/khachHangRoutes');
 const nhanVienRoutes = require('./routes/nhanVienRoutes'); // Hiếu
 const hdChuyenNhuongRoutes = require('./routes/hdChuyenNhuongRoutes'); // Hiếu
 const batDongSanRoutes = require('./routes/batdongsanRoutes'); // Phương Minh
