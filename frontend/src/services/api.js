@@ -1,10 +1,11 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api", // backend địa phương (port 3000)
+  // Chọn Port 5000 để khớp với Backend Server
+  baseURL: "http://localhost:5000/api", 
 });
 
-// gắn token tự động
+// Gắn token tự động vào header cho mọi request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -13,8 +14,12 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// APIs cho bất động sản
+// --- CÁC APIS DÙNG CHUNG ---
+
+// Lấy danh sách BĐS (Dùng cho cả trang danh sách và trang Hợp đồng)
 export const getBatDongSan = () => api.get("/batdongsan");
+
+// Lấy chi tiết 1 BĐS cụ thể
 export const getChiTietBDS = (id) => api.get(`/batdongsan/${id}`);
 
 export default api;

@@ -13,19 +13,24 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Kiểm tra dữ liệu an toàn - Không bao giờ để crash ở đây
+  // --- 1. XỬ LÝ DỮ LIỆU USER AN TOÀN ---
   const userStr = localStorage.getItem("user");
-  let userData = { email: "Admin", role: "admin" };
+  const roleStored = localStorage.getItem("role"); 
   
+  let userData = { 
+    tennv: "Người dùng", 
+    role: roleStored || "guest" 
+  };
+
   if (userStr) {
     try {
       const parsed = JSON.parse(userStr);
-      // Đảm bảo parsed phải là một Object hợp lệ, tránh trường hợp bị parse ra null
+      // Đảm bảo parsed là một Object hợp lệ và gộp dữ liệu role cho chắc chắn
       if (parsed && typeof parsed === 'object') {
-        userData = parsed;
+        userData = { ...parsed, role: roleStored || parsed.role || "guest" };
       }
     } catch (e) {
-      console.error("Dữ liệu user sai định dạng");
+      console.error("Dữ liệu user bị lỗi định dạng JSON");
     }
   }
 
@@ -34,6 +39,7 @@ export default function AdminLayout() {
     navigate("/login");
   };
 
+  // --- 2. DANH SÁCH MENU (Cập nhật đường dẫn chuẩn) ---
   const menuItems = [
     { key: "/", icon: <DashboardOutlined />, label: "Tổng quan" },
     { key: "/nhan-vien", icon: <UserOutlined />, label: "Nhân viên", adminonly: true },
@@ -43,7 +49,7 @@ export default function AdminLayout() {
       icon: <HomeOutlined />, 
       label: "Bất động sản",
       children: [
-        { key: "/danh-sach-bds", label: "Danh sách" },
+        { key: "/bat-dong-san", label: "Danh sách" },
         { key: "/bat-dong-san/add", icon: <PlusCircleOutlined />, label: "Thêm mới" },
       ]
     },
@@ -74,7 +80,7 @@ export default function AdminLayout() {
     const path = location.pathname;
     // Đối với các trang con như Sửa, highlight menu Danh sách cha
     if (path.startsWith("/sua-ky-gui/")) return "/quan-ly-ky-gui";
-    if (path.includes("/bat-dong-san") && !path.includes("/add")) return "/danh-sach-bds";
+    if (path.includes("/bat-dong-san") && !path.includes("/add")) return "/bat-dong-san";
     return path;
   };
 
@@ -92,8 +98,8 @@ export default function AdminLayout() {
             <Space>
               <Avatar size={40} icon={<UserOutlined />} style={{ backgroundColor: "#e6f4ff" }} />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {/* Ưu tiên hiển thị tên tennv (nếu có) */}
-              <Text strong>{userData.tennv || (userData.email ? userData.email.split('@')[0] : "User")}</Text>
+              {/* Hiển thị tên nhân viên hoặc phần trước @ của email */}
+              <Text strong>{userData.tennv || userData.email?.split('@')[0] || "User"}</Text>
                 <Tag 
                   color={userData.role === 'admin' ? 'red' : 'blue'} 
                   style={{ width: 'fit-content', marginTop: 4, textTransform: 'capitalize' }}
