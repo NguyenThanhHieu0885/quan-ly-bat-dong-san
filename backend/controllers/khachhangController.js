@@ -9,7 +9,6 @@ const getKhachHangs = async (req, res) => {
     res.status(500).json({ message: 'Lỗi server khi lấy danh sách khách hàng.' });
   }
 };
-
 const createKhachHang = async (req, res) => {
   try {
     const newKH = await KhachHang.create(req.body);
