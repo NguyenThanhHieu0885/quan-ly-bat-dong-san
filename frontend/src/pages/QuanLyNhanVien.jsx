@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Card, Modal, Form, Input, Select, DatePicker, message, Space, Popconfirm, Row, Col } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import api from '../services/api';
 import dayjs from 'dayjs';
 
 const QuanLyNhanVien = () => {
@@ -19,7 +19,7 @@ const QuanLyNhanVien = () => {
   const fetchData = async (keyword = "") => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:3000/api/nhanvien?keyword=${keyword}`);
+      const res = await api.get('/nhanvien', { params: { keyword } });
       setData(res.data);
       return res.data;
     } catch (error) {
@@ -90,10 +90,10 @@ const QuanLyNhanVien = () => {
       };
 
       if (editingId) {
-        await axios.put(`http://localhost:3000/api/nhanvien/${editingId}`, submitData);
+        await api.put(`/nhanvien/${editingId}`, submitData);
         message.success('Cập nhật thông tin thành công!');
       } else {
-        await axios.post('http://localhost:3000/api/nhanvien', submitData);
+        await api.post('/nhanvien', submitData);
         message.success('Thêm nhân viên thành công!');
       }
       setIsModalVisible(false);
@@ -108,7 +108,7 @@ const QuanLyNhanVien = () => {
   // Xóa nhân viên theo id và tải lại danh sách
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/nhanvien/${id}`);
+      await api.delete(`/nhanvien/${id}`);
       message.success('Xóa nhân viên thành công!');
       fetchData();
     } catch (error) {

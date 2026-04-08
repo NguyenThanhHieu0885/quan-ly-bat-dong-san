@@ -7,6 +7,7 @@ const { sequelize } = require('./config/db');
 // --- 1. IMPORT CÁC ROUTES (Giữ nguyên của tất cả các bạn) ---
 const authRoutes = require('./routes/authRoutes');
 const nhanVienRoutes = require('./routes/nhanVienRoutes'); // Hiếu
+const hdChuyenNhuongRoutes = require('./routes/hdChuyenNhuongRoutes'); // Hiếu
 const batDongSanRoutes = require('./routes/batdongsanRoutes'); // Phương Minh
 const khachHangRoutes = require('./routes/khachHangRoutes'); // Lân
 const hopdongdatcocRoutes = require('./routes/hopdongdatcocRoutes'); // Lân (Module mới)
@@ -43,6 +44,7 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', db: 'connected' })
 // Các API cũ của nhóm (Giữ nguyên đường dẫn để Front-end của các bạn không bị 404)
 app.use('/api/auth', authRoutes);
 app.use('/api/nhanvien', nhanVienRoutes);
+app.use('/api/hdchuyennhuong', hdChuyenNhuongRoutes);
 app.use('/api/batdongsan', batDongSanRoutes);
 app.use('/api/khachhang', khachHangRoutes);
 

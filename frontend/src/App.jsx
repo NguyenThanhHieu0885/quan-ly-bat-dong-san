@@ -12,6 +12,7 @@ import CreateHopDong from './pages/hopdong/Hopdongdatcoc';
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
+import HopDongChuyenNhuong from "./pages/HopDongChuyenNhuong";
 
 // --- 2. AUTH CHECK (Dùng bản feat cho bảo mật) ---
 const isAuthenticated = () => !!localStorage.getItem("user"); 
@@ -72,9 +73,8 @@ function App() {
             <Route path="bat-dong-san" element={<DanhSachBDS />} />
             <Route path="danh-sach-bds" element={<Navigate to="/bat-dong-san" replace />} /> 
             <Route path="hop-dong-ky-gui" element={<Placeholder title="Hợp đồng Ký gửi" />} />
+            <Route path="hop-dong-chuyen-nhuong" element={<HopDongChuyenNhuong />} />
             <Route path="hop-dong-dat-coc" element={<CreateHopDong />} />
-            
-            <Route path="hop-dong-chuyen-nhuong" element={<Placeholder title="Hợp đồng Chuyển nhượng" />} />
           </Route>
 
           {/* FALLBACK */}
