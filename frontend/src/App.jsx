@@ -12,6 +12,10 @@ import CreateHopDong from './pages/hopdong/Hopdongdatcoc';
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
+// --- Import của Nam (module Ký Gửi) ---
+import TaoKyGui from './pages/kygui/TaoKyGui';
+import QuanLyKyGui from './pages/kygui/QuanLyKyGui';
+import SuaKyGui from './pages/kygui/SuaKyGui';
 import HopDongChuyenNhuong from "./pages/HopDongChuyenNhuong";
 
 // --- 2. AUTH CHECK (Dùng bản feat cho bảo mật) ---
@@ -72,7 +76,15 @@ function App() {
             {/* Thống nhất đường dẫn với AdminLayout */}
             <Route path="bat-dong-san" element={<DanhSachBDS />} />
             <Route path="danh-sach-bds" element={<Navigate to="/bat-dong-san" replace />} /> 
-            <Route path="hop-dong-ky-gui" element={<Placeholder title="Hợp đồng Ký gửi" />} />
+            <Route path="bat-dong-san/add" element={<Placeholder title="Thêm Bất Động Sản" />} />
+            
+            {/* MODULE KÝ GỬI */}
+            <Route path="quan-ly-ky-gui" element={<QuanLyKyGui />} />
+            <Route path="tao-ky-gui" element={<TaoKyGui />} />
+            <Route path="sua-ky-gui/:id" element={<SuaKyGui />} />
+            <Route path="hop-dong-ky-gui" element={<Navigate to="/quan-ly-ky-gui" replace />} />
+            
+            {/* CÁC HỢP ĐỒNG KHÁC */}
             <Route path="hop-dong-chuyen-nhuong" element={<HopDongChuyenNhuong />} />
             <Route path="hop-dong-dat-coc" element={<CreateHopDong />} />
           </Route>

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+// Sửa lại tên import để tránh lỗi hoa/thường trên Linux/Mac
 const khachHangController = require('../controllers/khachhangController');
 
 router.get('/', khachHangController.getAllKhachHang);

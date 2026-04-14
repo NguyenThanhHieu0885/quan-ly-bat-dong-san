@@ -1,8 +1,8 @@
-const dayjs = require('dayjs');
-const { Op, Sequelize } = require('sequelize');
 const KhachHang = require('../models/KhachHang');
 const BatDongSan = require('../models/BatDongSan'); 
 const HopDongDatCoc = require('../models/HopDongDatCoc');
+const { Op, Sequelize } = require('sequelize');
+const dayjs = require('dayjs');
 
 // --- 1. HÀM VALIDATE (Chuẩn pháp lý BĐS) ---
 const validateCustomer = (data) => {

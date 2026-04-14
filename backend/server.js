@@ -10,6 +10,7 @@ const nhanVienRoutes = require('./routes/nhanVienRoutes'); // Hiếu
 const hdChuyenNhuongRoutes = require('./routes/hdChuyenNhuongRoutes'); // Hiếu
 const batDongSanRoutes = require('./routes/batdongsanRoutes'); // Phương Minh
 const khachHangRoutes = require('./routes/khachHangRoutes'); // Lân
+const kyGuiRoutes = require('./routes/kyGuiRoutes'); // Nam (Ký gửi)
 const hopdongdatcocRoutes = require('./routes/hopdongdatcocRoutes'); // Lân (Module mới)
 
 // --- 2. IMPORT CÁC MODELS ĐỂ THIẾT LẬP QUAN HỆ ---
@@ -30,10 +31,12 @@ KhachHang.belongsTo(NhanVien, { foreignKey: 'nvid' });
 NhanVien.hasMany(KhachHang, { foreignKey: 'nvid' });
 
 const app = express();
-const PORT = Number(process.env.PORT) || 5000;
+const PORT = Number(process.env.PORT) || 3000;
+const { scheduleStatusUpdates } = require('./models/statusUpdater');
 
 // --- 4. CẤU HÌNH MIDDLEWARE (Giữ giới hạn 50mb để các bạn khác upload ảnh không lỗi) ---
 app.use(cors());
+// Tăng giới hạn để nhận base64 ảnh lớn từ FE
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
@@ -48,8 +51,11 @@ app.use('/api/hdchuyennhuong', hdChuyenNhuongRoutes);
 app.use('/api/batdongsan', batDongSanRoutes);
 app.use('/api/khachhang', khachHangRoutes);
 
+app.use('/api/ky-gui', kyGuiRoutes);
 // API Hợp đồng mới của Fen
 app.use('/api/hopdong', hopdongdatcocRoutes);
+
+if (typeof scheduleStatusUpdates === 'function') scheduleStatusUpdates();
 
 // --- 6. XỬ LÝ LỖI 404 ---
 app.use((req, res) => {
@@ -59,8 +65,11 @@ app.use((req, res) => {
 // --- 7. KHỞI CHẠY SERVER ---
 const startServer = async () => {
     try {
-        await sequelize.authenticate();
-        console.log('Connected to MySQL Database.');
+        // Kiểm tra kết nối DB trước khi cho Server lắng nghe
+        if (sequelize) {
+            await sequelize.authenticate();
+            console.log('Connected to MySQL Database.');
+        }
         
         app.listen(PORT, () => {
             console.log(`Server is running at: http://localhost:${PORT}`);
