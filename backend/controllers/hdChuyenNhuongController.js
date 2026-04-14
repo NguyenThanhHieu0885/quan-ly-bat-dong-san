@@ -54,6 +54,46 @@ exports.getHDDatCocHopLe = async (req, res) => {
   }
 };
 
+// 1.2 Xem chi tiết HĐ chuyển nhượng theo mã hợp đồng
+exports.getDetail = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const sql = `
+      SELECT
+        cn.cnid,
+        cn.dcid AS dcid_lienket,
+        cn.khid,
+        kh.hoten AS khhoten,
+        kh.sdt AS khsdt,
+        cn.bdsid,
+        bds.loaiid AS bdsloai,
+        CONCAT_WS(', ', bds.sonha, bds.tenduong, bds.phuong, bds.quan, bds.thanhpho) AS bdsdiachi,
+        bds.dientich AS bdsdientich,
+        cn.giatri,
+        cn.ngaylap
+      FROM hopdongchuyennhuong cn
+      LEFT JOIN khachhang kh ON cn.khid = kh.khid
+      LEFT JOIN batdongsan bds ON cn.bdsid = bds.bdsid
+      WHERE cn.cnid = :id
+      LIMIT 1
+    `;
+
+    const data = await sequelize.query(sql, {
+      replacements: { id },
+      type: Sequelize.QueryTypes.SELECT
+    });
+
+    if (data.length === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy hợp đồng chuyển nhượng' });
+    }
+
+    res.json(data[0]);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi lấy chi tiết hợp đồng', error });
+  }
+};
+
 // 2. Thêm HĐCN (Tạo từ HĐ Đặt Cọc)
 exports.create = async (req, res) => {
   try {

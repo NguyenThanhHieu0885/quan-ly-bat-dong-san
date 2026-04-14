@@ -6,6 +6,9 @@ import api from '../services/api';
 import dayjs from 'dayjs';
 
 const QuanLyNhanVien = () => {
+  const MIN_EMPLOYEE_AGE = 18;
+  const MAX_EMPLOYEE_AGE = 70;
+
   // State và form phục vụ quản lý danh sách, loading, modal và chế độ chỉnh sửa
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -14,6 +17,40 @@ const QuanLyNhanVien = () => {
   const [editingId, setEditingId] = useState(null);
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
+
+  // Chỉ cho chọn ngày sinh trong khoảng tuổi hợp lệ
+  const disabledBirthDate = (current) => {
+    if (!current) return false;
+    const today = dayjs().endOf('day');
+    const oldestAllowedDate = dayjs().subtract(MAX_EMPLOYEE_AGE, 'year').startOf('day');
+    return current.isAfter(today) || current.isBefore(oldestAllowedDate);
+  };
+
+  // Kiểm tra tuổi thực tế khi lưu nhân viên
+  const validateBirthDate = (_, value) => {
+    if (!value) {
+      return Promise.resolve();
+    }
+
+    const birthDate = value.startOf('day');
+    const today = dayjs().startOf('day');
+
+    if (birthDate.isAfter(today)) {
+      return Promise.reject(new Error('Ngày sinh không được ở tương lai!'));
+    }
+
+    const age = today.diff(birthDate, 'year');
+
+    if (age < MIN_EMPLOYEE_AGE) {
+      return Promise.reject(new Error(`Nhân viên phải từ ${MIN_EMPLOYEE_AGE} tuổi trở lên!`));
+    }
+
+    if (age > MAX_EMPLOYEE_AGE) {
+      return Promise.reject(new Error(`Ngày sinh không hợp lệ (tuổi vượt quá ${MAX_EMPLOYEE_AGE})!`));
+    }
+
+    return Promise.resolve();
+  };
 
   // Tải danh sách nhân viên (có hỗ trợ tìm kiếm theo keyword)
   const fetchData = async (keyword = "") => {
@@ -200,8 +237,20 @@ const QuanLyNhanVien = () => {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="ngaysinh" label="Ngày sinh" rules={[{ required: true, message: 'Vui lòng chọn ngày sinh!' }]}>
-                <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
+              <Form.Item
+                name="ngaysinh"
+                label="Ngày sinh"
+                validateFirst
+                rules={[
+                  { required: true, message: 'Vui lòng chọn ngày sinh!' },
+                  { validator: validateBirthDate }
+                ]}
+              >
+                <DatePicker
+                  style={{ width: '100%' }}
+                  format="DD/MM/YYYY"
+                  disabledDate={disabledBirthDate}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
