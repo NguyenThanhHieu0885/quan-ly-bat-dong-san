@@ -5,6 +5,7 @@ const hdController = require('../controllers/hdChuyenNhuongController');
 
 router.get('/', hdController.getAll);
 router.get('/hopdongdatcoc', hdController.getHDDatCocHopLe);
+router.get('/chitiet/:id', hdController.getDetail);
 router.post('/', hdController.create);
 router.delete('/:id', hdController.deleteHD);
 router.get('/bds/:bdsid', hdController.getBDSInfo);

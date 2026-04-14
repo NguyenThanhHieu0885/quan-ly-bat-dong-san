@@ -2,13 +2,14 @@
 // Import React hooks và các thư viện cần thiết
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Card, Input, Space, message, Popconfirm } from 'antd';
-import { SearchOutlined, PlusOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
+import { SearchOutlined, PlusOutlined, EyeOutlined, DeleteOutlined, FileSearchOutlined } from '@ant-design/icons';
 import { hdChuyenNhuongService } from '../../services/hdChuyenNhuongService';
 import dayjs from 'dayjs';
 
 // Import các Modal (Mình đã chia nhỏ thành các file riêng biệt)
 import ModalThemHD from './ModalThemHD';
 import ModalXemBDS from './ModalXemBDS';
+import ModalChiTietHD from './ModalChiTietHD';
 
 // Component quản lý hợp đồng chuyển nhượng
 const HopDongChuyenNhuong = () => {
@@ -20,7 +21,9 @@ const HopDongChuyenNhuong = () => {
   // States cho Modals
   const [isThemVisible, setIsThemVisible] = useState(false);
   const [isXemBDSVisible, setIsXemBDSVisible] = useState(false);
+  const [isChiTietVisible, setIsChiTietVisible] = useState(false);
   const [selectedBDSId, setSelectedBDSId] = useState(null);
+  const [selectedCnId, setSelectedCnId] = useState(null);
 
   // Hàm lấy danh sách hợp đồng (có thể lọc theo từ khóa)
   const fetchContracts = async (keyword = "") => {
@@ -60,6 +63,12 @@ const HopDongChuyenNhuong = () => {
     setIsXemBDSVisible(true);
   };
 
+  // Mở modal xem chi tiết hợp đồng chuyển nhượng
+  const openChiTietHD = (cnid) => {
+    setSelectedCnId(cnid);
+    setIsChiTietVisible(true);
+  };
+
   // Cấu hình cột cho bảng hiển thị
   const columns = [
     { title: 'Mã HĐ', dataIndex: 'cnid', key: 'cnid' },
@@ -72,6 +81,7 @@ const HopDongChuyenNhuong = () => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
+          <Button type="link" icon={<FileSearchOutlined />} onClick={() => openChiTietHD(record.cnid)}>Chi tiết HĐ</Button>
           <Button type="link" icon={<EyeOutlined />} onClick={() => openXemBDS(record.bdsid)}>Xem BĐS</Button>
           <Popconfirm title="Xóa hợp đồng này?" onConfirm={() => handleDelete(record.cnid)}>
             <Button type="link" danger icon={<DeleteOutlined />} />
@@ -107,6 +117,12 @@ const HopDongChuyenNhuong = () => {
         open={isXemBDSVisible} 
         bdsid={selectedBDSId} 
         onClose={() => setIsXemBDSVisible(false)} 
+      />
+
+      <ModalChiTietHD
+        open={isChiTietVisible}
+        cnid={selectedCnId}
+        onClose={() => setIsChiTietVisible(false)}
       />
     </Card>
   );

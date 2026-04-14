@@ -2,6 +2,40 @@ const NhanVien = require('../models/NhanVien');
 const { sequelize, Sequelize } = require('../config/db');
 const { Op } = require('sequelize');
 
+const MIN_EMPLOYEE_AGE = 18;
+const MAX_EMPLOYEE_AGE = 70;
+
+const validateBirthDate = (inputDate) => {
+  const birthDate = new Date(inputDate);
+  if (Number.isNaN(birthDate.getTime())) {
+    return 'Ngày sinh không hợp lệ!';
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  birthDate.setHours(0, 0, 0, 0);
+
+  if (birthDate > today) {
+    return 'Ngày sinh không được ở tương lai!';
+  }
+
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age -= 1;
+  }
+
+  if (age < MIN_EMPLOYEE_AGE) {
+    return `Nhân viên phải từ ${MIN_EMPLOYEE_AGE} tuổi trở lên!`;
+  }
+
+  if (age > MAX_EMPLOYEE_AGE) {
+    return `Ngày sinh không hợp lệ (tuổi vượt quá ${MAX_EMPLOYEE_AGE})!`;
+  }
+
+  return null;
+};
+
 // 1. LẤY DANH SÁCH NHÂN VIÊN
 exports.getAllNhanVien = async (req, res) => {
   try {
@@ -28,6 +62,11 @@ exports.createNhanVien = async (req, res) => {
       return res.status(400).json({ message: "Vui lòng nhập đầy đủ thông tin nhân viên!" });
     }
 
+    const birthDateError = validateBirthDate(ngaysinh);
+    if (birthDateError) {
+      return res.status(400).json({ message: birthDateError });
+    }
+
     const exist = await NhanVien.findOne({ where: { taikhoan } });
     if (exist) return res.status(400).json({ message: "Tài khoản đã tồn tại" });
 
@@ -47,6 +86,11 @@ exports.updateNhanVien = async (req, res) => {
     if (!taikhoan || !tennv || !sdt || !diachi || !ngaysinh || !email || 
         gioitinh === undefined || quyen === undefined || trangthai === undefined) {
       return res.status(400).json({ message: "Vui lòng nhập đầy đủ thông tin!" });
+    }
+
+    const birthDateError = validateBirthDate(ngaysinh);
+    if (birthDateError) {
+      return res.status(400).json({ message: birthDateError });
     }
 
     const exist = await NhanVien.findOne({ where: { taikhoan } });
