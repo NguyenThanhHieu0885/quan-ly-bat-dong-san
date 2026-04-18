@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Backend chạy ở port 5000, Frontend chạy ở 3000
 const API_BASE_URL = 'http://localhost:3000/api';
 
 // 1. Tạo hợp đồng đặt cọc

@@ -9,7 +9,7 @@ const BatDongSan = sequelize.define('BatDongSan', {
   },
   loaiid: { type: DataTypes.INTEGER, allowNull: true },
   khid: { type: DataTypes.INTEGER, allowNull: true },
-  tinhtrang: { type: DataTypes.INTEGER, allowNull: true }, // 0: Trống, 1: Đã cọc (theo data dump của bạn là 0)
+  tinhtrang: { type: DataTypes.INTEGER, allowNull: true }, 
   dientich: { type: DataTypes.FLOAT, allowNull: true },
   dongia: { type: DataTypes.FLOAT, allowNull: true },
   masoqsdd: { type: DataTypes.STRING(50), allowNull: true },

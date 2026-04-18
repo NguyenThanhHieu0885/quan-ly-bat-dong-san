@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const khachHangController = require('../controllers/khachhangController');
+// Sửa lại tên import để tránh lỗi hoa/thường trên Linux/Mac
+const khachHangController = require('../controllers/khachHangController');
 
 router.get('/', khachHangController.getAllKhachHang);
 router.post('/', khachHangController.createKhachHang);

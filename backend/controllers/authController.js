@@ -1,4 +1,4 @@
-const NhanVien = require('../models/NhanVien');
+const NhanVien = require('../models/NhanVienModel');
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 

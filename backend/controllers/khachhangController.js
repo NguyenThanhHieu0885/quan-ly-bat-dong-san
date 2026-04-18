@@ -1,8 +1,9 @@
 const dayjs = require('dayjs');
 const { Op } = require('sequelize');
-const KhachHang = require('../models/KhachHang');
-const Batdongsan = require('../models/BatDongSan'); 
-const HopDongDatCoc = require('../models/HopDongDatCoc');
+const NhanVien = require('../models/NhanVienModel');
+const KhachHang = require('../models/KhachHangModel');
+const Batdongsan = require('../models/BatDongSanModel'); 
+const HopDongDatCoc = require('../models/HopDongDatCocModel');
 
 // --- HÀM VALIDATE CẬP NHẬT LOGIC ĐỘ TUỔI ---
 const validateCustomer = (data) => {
@@ -54,22 +55,42 @@ exports.getAllKhachHang = async (req, res) => {
         const { keyword, trangthai, gioitinh } = req.query;
         let where = {};
 
+        // Xử lý tìm kiếm từ khóa
         if (keyword?.trim()) {
             const s = `%${keyword.trim()}%`;
             where[Op.or] = [
+                { khid: { [Op.like]: s } },
                 { hoten: { [Op.like]: s } },
                 { cmnd: { [Op.like]: s } },
                 { sdt: { [Op.like]: s } },
                 { email: { [Op.like]: s } }
             ];
         }
-        if (trangthai !== undefined) where.trangthai = trangthai;
-        if (gioitinh !== undefined) where.gioitinh = gioitinh;
 
-        const data = await KhachHang.findAll({ where, order: [['khid', 'ASC']] });
+        if (trangthai !== undefined && trangthai !== "") {
+            where.trangthai = Number(trangthai);
+        }
+        if (gioitinh !== undefined && gioitinh !== "") {
+            where.gioitinh = Number(gioitinh);
+        }
+
+        const data = await KhachHang.findAll({ 
+            where, 
+            include: [{ 
+                model: NhanVien, 
+                attributes: ['tennv'] 
+            }],
+            order: [['khid', 'ASC']] 
+        });
+
         res.json(data);
     } catch (err) {
-        res.status(500).json({ message: 'Lỗi hệ thống', error: err.message });
+        // Log lỗi chi tiết để bạn dễ debug
+        console.error("Lỗi getAllKhachHang:", err);
+        res.status(500).json({ 
+            message: 'Lỗi hệ thống', 
+            error: err.message 
+        });
     }
 };
 
