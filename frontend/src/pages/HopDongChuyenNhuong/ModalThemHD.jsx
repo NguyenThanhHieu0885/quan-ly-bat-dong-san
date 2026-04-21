@@ -84,7 +84,7 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
         bdsloai: selectedDC.loaibds,
         bdsdiachi: selectedDC.diachibds,
         bdsdientich: selectedDC.dientich,
-        giatri: selectedDC.giatri // Hoặc có thể cho phép nhập tay
+        giatri: selectedDC.giabds // Tự động lấy giá BĐS thay vì giá cọc
       });
     }
   };

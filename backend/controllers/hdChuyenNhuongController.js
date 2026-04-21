@@ -50,6 +50,7 @@ exports.getHDDatCocHopLe = async (req, res) => {
         dc.khid,
         dc.bdsid,
         dc.giatri,
+        bds.dongia AS giabds,
         kh.hoten AS tenkhachhang,
         kh.sdt AS sdtkhachhang,
         bds.loaiid AS loaibds,
