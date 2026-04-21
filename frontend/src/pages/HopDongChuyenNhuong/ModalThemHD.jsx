@@ -1,6 +1,10 @@
 // File: frontend/src/pages/HopDongChuyenNhuong/ModalThemHD.jsx
 // Import React hooks và các thư viện cần thiết
+<<<<<<< Updated upstream
 import React, { useState, useEffect, useRef } from 'react';
+=======
+import React, { useState, useEffect } from 'react';
+>>>>>>> Stashed changes
 import { Modal, Form, Input, InputNumber, Select, DatePicker, message } from 'antd';
 import { hdChuyenNhuongService } from '../../services/hdChuyenNhuongService';
 import dayjs from 'dayjs';
@@ -10,6 +14,7 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
   // Khởi tạo form và state danh sách HĐ đặt cọc
   const [form] = Form.useForm();
   const [listDatCoc, setListDatCoc] = useState([]);
+<<<<<<< Updated upstream
   const [loadingDatCoc, setLoadingDatCoc] = useState(false);
   const searchTimeoutRef = useRef(null);
 
@@ -39,6 +44,8 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
       loadDatCocOptions(keyword);
     }, 300);
   };
+=======
+>>>>>>> Stashed changes
 
   // Hàm định dạng tiền tệ theo chuẩn Việt Nam
   const formatCurrency = (value) => {
@@ -61,6 +68,7 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
   useEffect(() => {
     if (open) {
       form.resetFields();
+<<<<<<< Updated upstream
       loadDatCocOptions();
     }
     return () => {
@@ -68,6 +76,17 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
         clearTimeout(searchTimeoutRef.current);
       }
     };
+=======
+      // Load danh sách HĐ Đặt cọc để user chọn (theo đúng sơ đồ include)
+      hdChuyenNhuongService.getHDDatCocHopLe()
+        .then(res => setListDatCoc(res.data))
+        .catch(err => {
+          console.error(err);
+          setListDatCoc([]);
+          message.error("Không tải được danh sách hợp đồng đặt cọc");
+        });
+    }
+>>>>>>> Stashed changes
   }, [open]);
 
   // Khi chọn HĐ đặt cọc thì tự động điền thông tin KH và BĐS
@@ -84,7 +103,11 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
         bdsloai: selectedDC.loaibds,
         bdsdiachi: selectedDC.diachibds,
         bdsdientich: selectedDC.dientich,
+<<<<<<< Updated upstream
         giatri: selectedDC.giabds // Tự động lấy giá BĐS thay vì giá cọc
+=======
+        giatri: selectedDC.giatri // Hoặc có thể cho phép nhập tay
+>>>>>>> Stashed changes
       });
     }
   };
@@ -117,6 +140,7 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
       <Form form={form} layout="vertical">
         {/* Chọn HĐ đặt cọc để liên kết dữ liệu */}
         <Form.Item name="dcid" label="Chọn từ Hợp Đồng Đặt Cọc" rules={[{ required: true }]}>
+<<<<<<< Updated upstream
           <Select
             showSearch
             filterOption={false}
@@ -126,6 +150,9 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
             loading={loadingDatCoc}
             notFoundContent={loadingDatCoc ? 'Đang tải dữ liệu...' : 'Không có hợp đồng phù hợp'}
           >
+=======
+          <Select onChange={handleSelectDatCoc} placeholder="Chọn HĐ Đặt Cọc...">
+>>>>>>> Stashed changes
             {listDatCoc.map(dc => (
               <Select.Option key={dc.dcid} value={dc.dcid}>
                 {renderDatCocLabel(dc)}

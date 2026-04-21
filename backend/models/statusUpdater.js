@@ -1,5 +1,9 @@
 const cron = require('node-cron');
+<<<<<<< Updated upstream
 const KyGui = require('../models/kyGuiModel');
+=======
+const KyGui = require('../models/HopDongKyGuiModel');
+>>>>>>> Stashed changes
 
 // Lên lịch chạy công việc vào 00:01 (1 phút sau nửa đêm) mỗi ngày.
 const scheduleStatusUpdates = () => {

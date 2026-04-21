@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< Updated upstream
 import { taoKyGuiMoi, layDanhSachBDS, layDanhSachKhachHang } from '../../services/kyGuiService';
 import { useNavigate } from 'react-router-dom';
 import Toast from '../../components/Toast';
+=======
+import { taoKyGuiMoi, layDanhSachBDS, layDanhSachKhachHang, layDanhSachKyGui } from '../../services/hopdongkyguiServices';
+import { useNavigate } from 'react-router-dom';
+import Toast from '../../components/Toast';
+import { Select, Card, Input, Button } from 'antd';
+>>>>>>> Stashed changes
 
 export default function TaoKyGui() {
   const today = new Date().toISOString().split('T')[0];
@@ -14,7 +21,11 @@ export default function TaoKyGui() {
     chiphidv: '',
     ngaybatdau: today,
     ngayketthuc: '',
+<<<<<<< Updated upstream
     trangthai: '0'
+=======
+    trangthai: '1' // Mặc định là Đang hiệu lực
+>>>>>>> Stashed changes
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -25,11 +36,27 @@ export default function TaoKyGui() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+<<<<<<< Updated upstream
         const [bdsResponse, khResponse] = await Promise.all([
           layDanhSachBDS(),
           layDanhSachKhachHang()
         ]);
         setDanhSachBDS(bdsResponse.data);
+=======
+        const [bdsResponse, khResponse, kyGuiResponse] = await Promise.all([
+          layDanhSachBDS(),
+          layDanhSachKhachHang(),
+          layDanhSachKyGui()
+        ]);
+        
+        // Lọc BĐS: Chỉ giữ lại những BĐS CHƯA có hợp đồng ký gửi nào đang hiệu lực
+        const activeKyGuiBdsIds = kyGuiResponse.data
+          .filter(kg => String(kg.trangthai) === '1')
+          .map(kg => kg.bdsid);
+        const availableBDS = bdsResponse.data.filter(bds => !activeKyGuiBdsIds.includes(bds.bdsid));
+
+        setDanhSachBDS(availableBDS);
+>>>>>>> Stashed changes
         setDanhSachKH(khResponse.data);
       } catch (err) {
         console.error('Lỗi khi tải dữ liệu dropdown:', err);
@@ -41,11 +68,17 @@ export default function TaoKyGui() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'giatri' || name === 'chiphidv') {
+<<<<<<< Updated upstream
       const numericValue = value.replace(/\D/g, '');
       const formattedValue = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       setFormData({ ...formData, [name]: formattedValue });
     } else if (name === 'khid' || name === 'bdsid') {
       setFormData({ ...formData, [name]: value.toUpperCase() });
+=======
+      const numericValue = String(value).replace(/\D/g, '');
+      const formattedValue = numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      setFormData({ ...formData, [name]: formattedValue });
+>>>>>>> Stashed changes
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -82,7 +115,11 @@ export default function TaoKyGui() {
       await taoKyGuiMoi(payload);
       setFormData({
         khid: '', bdsid: '', giatri: '', chiphidv: '',
+<<<<<<< Updated upstream
         ngaybatdau: today, ngayketthuc: '', trangthai: '0'
+=======
+        ngaybatdau: today, ngayketthuc: '', trangthai: '1'
+>>>>>>> Stashed changes
       });
       setShowSuccess(true);
       // Đợi 2s để hiện Toast rồi tự động chuyển về trang Quản Lý
@@ -95,6 +132,7 @@ export default function TaoKyGui() {
     }
   };
 
+<<<<<<< Updated upstream
   const darkTheme = {
     container: { color: '#f0f0f0' },
     form: { backgroundColor: '#2c2c2c', padding: '30px', borderRadius: '12px', boxShadow: '0 10px 10px rgba(0,0,0,0.2)' },
@@ -277,6 +315,103 @@ export default function TaoKyGui() {
           </div>
         </form>
       </div>
+=======
+  return (
+    <div style={{ padding: '10px' }}>
+      <Toast show={showSuccess} message="Tạo hợp đồng thành công!" />
+
+      <Card 
+        title={<h2 style={{ textAlign: 'center', margin: 0, color: '#1677ff' }}>Tạo Hợp Đồng Ký Gửi Mới</h2>} 
+        style={{ maxWidth: '800px', margin: '0 auto', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', borderRadius: '12px' }}
+      >
+        
+        <form onSubmit={handleSubmit}>
+          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <div style={{ color: '#ff4d4d', textAlign: 'center', minHeight: '24px', marginBottom: '15px', fontWeight: 'bold' }}>{error || '\u00A0'}</div>
+            
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Mã Khách Hàng (*):</label>
+              <Select
+                size="large"
+                showSearch
+                allowClear
+                style={{ width: '100%' }}
+                placeholder="🔍 Nhập Tên Khách Hàng hoặc ID để tìm..."
+                value={formData.khid || undefined}
+                onChange={(value) => handleChange({ target: { name: 'khid', value: value || '' } })}
+                options={danhSachKH.map(kh => ({
+                  value: kh.khid,
+                  label: `${kh.hoten || 'Chưa cập nhật tên'} (Mã KH: ${kh.khid})`
+                }))}
+                filterOption={(input, option) =>
+                  String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+              />
+            </div>
+            
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Mã Bất Động Sản (*):</label>
+              <Select
+                size="large"
+                showSearch
+                allowClear
+                style={{ width: '100%' }}
+                placeholder="🔍 Nhập Địa chỉ BĐS hoặc ID để tìm..."
+                value={formData.bdsid || undefined}
+                onChange={(value) => handleChange({ target: { name: 'bdsid', value: value || '' } })}
+                options={danhSachBDS.map(bds => {
+                  const bdsName = `${bds.sonha || ''} ${bds.tenduong || ''}`.trim();
+                  return {
+                    value: bds.bdsid,
+                    label: bdsName ? `${bdsName} (Mã: ${bds.bdsid})` : `BĐS ${bds.bdsid} - QSDĐ: ${bds.masoqsdd || 'N/A'}`
+                  };
+                })}
+                filterOption={(input, option) =>
+                  String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+              />
+            </div>
+            
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Giá trị Hợp Đồng (VNĐ) (*):</label>
+              <Input size="large" type="text" inputMode="numeric" name="giatri" value={formData.giatri} onChange={handleChange} required placeholder="Ví dụ: 3,500,000,000" />
+            </div>
+            
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Chi Phí Dịch Vụ (VNĐ) (*):</label>
+              <Input size="large" type="text" inputMode="numeric" name="chiphidv" value={formData.chiphidv} onChange={handleChange} required placeholder="Ví dụ: 50,000,000" />
+            </div>
+            
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Ngày Bắt Đầu (*):</label>
+              <Input size="large" type="date" name="ngaybatdau" value={formData.ngaybatdau} onChange={handleChange} required readOnly style={{ backgroundColor: '#f5f5f5', color: '#888', cursor: 'not-allowed' }} />
+              <span style={{ fontSize: '13px', color: '#888', marginTop: '5px', display: 'block', fontStyle: 'italic' }}>* Ngày bắt đầu là ngày hôm nay và không thể thay đổi.</span>
+            </div>
+            
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Ngày Kết Thúc:</label>
+              <Input size="large" type="date" name="ngayketthuc" value={formData.ngayketthuc} onChange={handleChange} min={formData.ngaybatdau} />
+            </div>
+            
+            <div style={{ marginBottom: '25px' }}>
+              <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Trạng Thái:</label>
+              <Select size="large" style={{ width: '100%' }} value={String(formData.trangthai)} onChange={(value) => handleChange({ target: { name: 'trangthai', value } })}>
+                <Select.Option value="1">Đang hiệu lực</Select.Option>
+              </Select>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '15px' }}>
+              <Button size="large" onClick={() => { if (window.confirm('Bạn có chắc chắn muốn hủy và quay lại trang quản lý không?')) navigate('/quan-ly-ky-gui'); }} style={{ width: '50%' }}>
+                Hủy
+              </Button>
+              <Button size="large" type="primary" htmlType="submit" loading={loading} style={{ width: '50%' }}>
+                {loading ? 'Đang xử lý...' : 'Tạo Hợp Đồng'}
+              </Button>
+            </div>
+          </div>
+        </form>
+      </Card>
+>>>>>>> Stashed changes
     </div>
   );
 }

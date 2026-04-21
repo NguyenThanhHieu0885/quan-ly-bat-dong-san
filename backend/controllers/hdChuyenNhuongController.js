@@ -1,5 +1,9 @@
 // File: backend/controllers/hdChuyenNhuongController.js
+<<<<<<< Updated upstream
 const HopDongChuyenNhuong = require('../models/HopDongChuyenNhuong');
+=======
+const HopDongChuyenNhuong = require('../models/HopDongChuyenNhuongModel');
+>>>>>>> Stashed changes
 const { sequelize, Sequelize } = require('../config/db');
 
 // 1. Mở màn hình & Tra cứu HĐCN
@@ -27,6 +31,7 @@ exports.getAll = async (req, res) => {
 // 1.1 Lấy danh sách HĐ Đặt cọc hợp lệ để tạo HĐ chuyển nhượng
 exports.getHDDatCocHopLe = async (req, res) => {
   try {
+<<<<<<< Updated upstream
     const { keyword = '', limit = 50 } = req.query;
     const trimmedKeyword = typeof keyword === 'string' ? keyword.trim() : '';
     let safeLimit = Number.parseInt(limit, 10);
@@ -44,13 +49,18 @@ exports.getHDDatCocHopLe = async (req, res) => {
       `;
     }
 
+=======
+>>>>>>> Stashed changes
     const sql = `
       SELECT 
         dc.dcid,
         dc.khid,
         dc.bdsid,
         dc.giatri,
+<<<<<<< Updated upstream
         bds.dongia AS giabds,
+=======
+>>>>>>> Stashed changes
         kh.hoten AS tenkhachhang,
         kh.sdt AS sdtkhachhang,
         bds.loaiid AS loaibds,
@@ -62,6 +72,7 @@ exports.getHDDatCocHopLe = async (req, res) => {
       LEFT JOIN batdongsan bds ON dc.bdsid = bds.bdsid
       LEFT JOIN hopdongchuyennhuong cn ON cn.dcid = dc.dcid
       WHERE cn.dcid IS NULL
+<<<<<<< Updated upstream
       ${searchCondition}
       ORDER BY dc.dcid DESC
       LIMIT ${safeLimit}
@@ -71,12 +82,19 @@ exports.getHDDatCocHopLe = async (req, res) => {
       replacements,
       type: Sequelize.QueryTypes.SELECT,
     });
+=======
+      ORDER BY dc.dcid DESC
+    `;
+
+    const data = await sequelize.query(sql, { type: Sequelize.QueryTypes.SELECT });
+>>>>>>> Stashed changes
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: "Lỗi lấy danh sách hợp đồng đặt cọc", error });
   }
 };
 
+<<<<<<< Updated upstream
 // 1.2 Xem chi tiết HĐ chuyển nhượng theo mã hợp đồng
 exports.getDetail = async (req, res) => {
   try {
@@ -117,6 +135,8 @@ exports.getDetail = async (req, res) => {
   }
 };
 
+=======
+>>>>>>> Stashed changes
 // 2. Thêm HĐCN (Tạo từ HĐ Đặt Cọc)
 exports.create = async (req, res) => {
   try {
