@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Image, Spin, Empty } from 'antd';
-import axios from 'axios';
+import api from '../services/api';
 
 const HinhAnhBDS = ({ bdsId, visible, onCancel }) => {
   const [imgSrc, setImgSrc] = useState(null);
@@ -8,7 +8,7 @@ const HinhAnhBDS = ({ bdsId, visible, onCancel }) => {
 
 useEffect(() => {
   if (visible && bdsId) {
-    axios.get(`http://localhost:3000/batdongsan/hinh-anh/${bdsId}`)
+    api.get(`/batdongsan/hinh-anh/${bdsId}`)
       .then(res => setImgSrc(res.data.src))
       .catch(() => setImgSrc(null))
       .finally(() => setLoading(false));

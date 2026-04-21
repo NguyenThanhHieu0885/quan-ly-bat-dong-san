@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, InputNumber, message, Upload, Image, Button } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import api from '../services/api';
 
 const FormCapNhatBDS = ({ visible, record, onCancel, onSuccess }) => {
     const [form] = Form.useForm();
@@ -46,7 +46,7 @@ const FormCapNhatBDS = ({ visible, record, onCancel, onSuccess }) => {
               });
             }
 
-            const response = await axios.put(`http://localhost:3000/batdongsan/${record.bdsid}`, payload);
+            const response = await api.put(`/batdongsan/${record.bdsid}`, payload);
 
             message.success(response.data.message);
             onSuccess();

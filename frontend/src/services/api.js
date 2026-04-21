@@ -1,11 +1,31 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  // Chọn Port 5000 để khớp với Backend Server
+  baseURL: "http://localhost:5000/api", 
 });
 
-export const getBatDongSan = () => api.get('/batdongsan');
+// Gắn token tự động vào header cho mọi request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
+// --- CÁC APIS DÙNG CHUNG ---
+
+// Lấy danh sách BĐS (Dùng cho cả trang danh sách và trang Hợp đồng)
+export const getBatDongSan = () => api.get("/batdongsan");
+
+// Lấy chi tiết 1 BĐS cụ thể
 export const getChiTietBDS = (id) => api.get(`/batdongsan/${id}`);
+
+// Thêm mới BĐS
+export const addBatDongSan = (data) => api.post("/batdongsan", data);
+
+// Xóa BĐS
+export const deleteBatDongSan = (id) => api.delete(`/batdongsan/${id}`);
 
 export default api;

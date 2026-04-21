@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Input, Button, message } from 'antd';
-import axios from 'axios';
+import api from '../services/api';
 
 const TraCuuBDS = ({ visible, onCancel, onSearchSuccess }) => {
   const [keyword, setKeyword] = useState('');
@@ -12,7 +12,7 @@ const TraCuuBDS = ({ visible, onCancel, onSearchSuccess }) => {
     }
 
     setLoading(true);
-    axios.get(`http://localhost:3000/batdongsan/tra-cuu?keyword=${keyword}`)
+    api.get(`/batdongsan/tra-cuu?keyword=${keyword}`)
       .then(res => {
         if (Array.isArray(res.data) && res.data.length === 0) {
           message.info("Không tìm thấy bất động sản");

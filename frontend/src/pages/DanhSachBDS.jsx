@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Input, Space, Card, Typography } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import { getBatDongSan } from "../services/api";
 import FormChiTietBDS from "./FormChiTietBDS";
 import HinhAnhBDS from "./HinhAnhBDS";
@@ -8,6 +9,7 @@ import TraCuuBDS from "./FormTraCuuBDS";
 import FormCapNhatBDS from './FormCapNhatBDS';
 
 const DanhSachBDS = () => {
+  const navigate = useNavigate();
   const [listBDS, setListBDS] = useState([]);
   const [originalListBDS, setOriginalListBDS] = useState([]);
   const [chiTietVisible, setChiTietVisible] = useState(false);
@@ -114,15 +116,21 @@ const DanhSachBDS = () => {
                 setIsFiltered(false);
               }}
             >
-              Quay về danh sách
+              &larr; Quay về danh sách
             </Button>
           )}
           <Button
-            type="primary"
             icon={<SearchOutlined />}
             onClick={() => setIsSearchOpen(true)}
           >
             Tra cứu Bất động sản
+          </Button>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => navigate("/bat-dong-san/add")}
+          >
+            Thêm Bất động sản
           </Button>
         </div>
 
