@@ -1,6 +1,6 @@
 // File: frontend/src/pages/HopDongChuyenNhuong/ModalThemHD.jsx
 // Import React hooks và các thư viện cần thiết
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal, Form, Input, InputNumber, Select, DatePicker, message } from 'antd';
 import { hdChuyenNhuongService } from '../../services/hdChuyenNhuongService';
 import dayjs from 'dayjs';
@@ -10,6 +10,35 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
   // Khởi tạo form và state danh sách HĐ đặt cọc
   const [form] = Form.useForm();
   const [listDatCoc, setListDatCoc] = useState([]);
+  const [loadingDatCoc, setLoadingDatCoc] = useState(false);
+  const searchTimeoutRef = useRef(null);
+
+  const loadDatCocOptions = async (keyword = '') => {
+    setLoadingDatCoc(true);
+    try {
+      const res = await hdChuyenNhuongService.getHDDatCocHopLe({
+        keyword,
+        limit: 50,
+      });
+      setListDatCoc(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error(err);
+      setListDatCoc([]);
+      message.error('Không tải được danh sách hợp đồng đặt cọc');
+    } finally {
+      setLoadingDatCoc(false);
+    }
+  };
+
+  const handleSearchDatCoc = (value) => {
+    const keyword = (value || '').trim();
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    searchTimeoutRef.current = setTimeout(() => {
+      loadDatCocOptions(keyword);
+    }, 300);
+  };
 
   // Hàm định dạng tiền tệ theo chuẩn Việt Nam
   const formatCurrency = (value) => {
@@ -32,15 +61,13 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
   useEffect(() => {
     if (open) {
       form.resetFields();
-      // Load danh sách HĐ Đặt cọc để user chọn (theo đúng sơ đồ include)
-      hdChuyenNhuongService.getHDDatCocHopLe()
-        .then(res => setListDatCoc(res.data))
-        .catch(err => {
-          console.error(err);
-          setListDatCoc([]);
-          message.error("Không tải được danh sách hợp đồng đặt cọc");
-        });
+      loadDatCocOptions();
     }
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
   }, [open]);
 
   // Khi chọn HĐ đặt cọc thì tự động điền thông tin KH và BĐS
@@ -90,7 +117,15 @@ const ModalThemHD = ({ open, onClose, onSuccess }) => {
       <Form form={form} layout="vertical">
         {/* Chọn HĐ đặt cọc để liên kết dữ liệu */}
         <Form.Item name="dcid" label="Chọn từ Hợp Đồng Đặt Cọc" rules={[{ required: true }]}>
-          <Select onChange={handleSelectDatCoc} placeholder="Chọn HĐ Đặt Cọc...">
+          <Select
+            showSearch
+            filterOption={false}
+            onSearch={handleSearchDatCoc}
+            onChange={handleSelectDatCoc}
+            placeholder="Nhập tên khách hàng đặt cọc để tìm..."
+            loading={loadingDatCoc}
+            notFoundContent={loadingDatCoc ? 'Đang tải dữ liệu...' : 'Không có hợp đồng phù hợp'}
+          >
             {listDatCoc.map(dc => (
               <Select.Option key={dc.dcid} value={dc.dcid}>
                 {renderDatCocLabel(dc)}

@@ -85,19 +85,23 @@ const QuanLyNhanVien = () => {
   // Xử lý tra cứu nhân viên theo từ khóa nhập vào
   const handleSearch = async () => {
     try {
-      const { keyword } = await searchForm.validateFields();
+      const keyword = searchForm.getFieldValue('keyword') || '';
       const trimmedKeyword = keyword.trim();
+
+      if (!trimmedKeyword) {
+        await fetchData();
+        message.warning('Vui lòng nhập tiêu chí tra cứu!');
+        closeSearchModal();
+        return;
+      }
+
       const result = await fetchData(trimmedKeyword);
       if (Array.isArray(result) && result.length === 0) {
         message.warning('Không tìm thấy nhân viên phù hợp.');
       }
       closeSearchModal();
     } catch (error) {
-      if (error?.errorFields) {
-        message.warning('Vui lòng nhập tiêu chí tra cứu!');
-      } else {
-        message.error('Có lỗi xảy ra khi tra cứu.');
-      }
+      message.error('Có lỗi xảy ra khi tra cứu.');
     }
   };
 
@@ -319,11 +323,6 @@ const QuanLyNhanVien = () => {
           <Form.Item
             name="keyword"
             label="Thông tin cần tra cứu"
-            rules={[
-              {
-                validator: (_, value) => (value && value.trim() ? Promise.resolve() : Promise.reject(new Error('Vui lòng nhập tiêu chí tra cứu!'))),
-              },
-            ]}
           >
             <Input placeholder="Nhập tên, tài khoản, email..." />
           </Form.Item>

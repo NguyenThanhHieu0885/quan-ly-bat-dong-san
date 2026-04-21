@@ -39,10 +39,17 @@ const validateBirthDate = (inputDate) => {
 // 1. LẤY DANH SÁCH NHÂN VIÊN
 exports.getAllNhanVien = async (req, res) => {
   try {
-    const { keyword } = req.query; 
+    const { keyword } = req.query;
+    const trimmedKeyword = typeof keyword === 'string' ? keyword.trim() : '';
     let condition = {};
-    if (keyword) {  
-      condition = { tennv: { [Op.like]: `%${keyword}%` } };
+    if (trimmedKeyword) {
+      condition = {
+        [Op.or]: [
+          { tennv: { [Op.like]: `%${trimmedKeyword}%` } },
+          { taikhoan: { [Op.like]: `%${trimmedKeyword}%` } },
+          { email: { [Op.like]: `%${trimmedKeyword}%` } },
+        ],
+      };
     }
     const data = await NhanVien.findAll({ where: condition });
     res.json(data);
