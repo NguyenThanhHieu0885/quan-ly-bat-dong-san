@@ -9,5 +9,5 @@ export const hdChuyenNhuongService = {
   getBDSInfo: (bdsid) => api.get(`/hdchuyennhuong/bds/${bdsid}`),
   
   // API lấy danh sách HĐ đặt cọc chưa được chuyển nhượng
-  getHDDatCocHopLe: () => api.get('/hdchuyennhuong/hopdongdatcoc') 
+  getHDDatCocHopLe: (params = {}) => api.get('/hdchuyennhuong/hopdongdatcoc', { params })
 };
