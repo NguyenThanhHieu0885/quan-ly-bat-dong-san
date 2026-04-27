@@ -1,4 +1,8 @@
 import React from 'react';
+<<<<<<< Updated upstream
+=======
+import { Select } from 'antd';
+>>>>>>> Stashed changes
 
 export default function KyGuiForm({
   title,
@@ -33,16 +37,35 @@ export default function KyGuiForm({
           
           <div>
             <label style={darkTheme.label}>Mã Khách Hàng (*):</label>
+<<<<<<< Updated upstream
             <select name="khid" value={formData.khid} onChange={onChange} required style={darkTheme.input}>
               <option value="">-- Chọn Khách Hàng --</option>
               {danhSachKH.map(kh => (
                 <option key={kh.khid} value={kh.khid}>{kh.khid} - {kh.hoten || 'Chưa cập nhật tên'}</option>
               ))}
             </select>
+=======
+            <Select
+              showSearch
+              allowClear
+              style={{ ...darkTheme.input, padding: 0, display: 'flex', alignItems: 'center' }}
+              placeholder="🔍 Nhập Tên Khách Hàng hoặc ID để tìm..."
+              value={formData.khid || undefined}
+              onChange={(value) => onChange({ target: { name: 'khid', value: value || '' } })}
+              options={danhSachKH.map(kh => ({
+                value: kh.khid,
+                label: `${kh.hoten || 'Chưa cập nhật tên'} (Mã KH: ${kh.khid})`
+              }))}
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+            />
+>>>>>>> Stashed changes
           </div>
           
           <div style={{marginTop: '15px'}}>
             <label style={darkTheme.label}>Mã Bất Động Sản (*):</label>
+<<<<<<< Updated upstream
             <select name="bdsid" value={formData.bdsid} onChange={onChange} required style={darkTheme.input}>
               <option value="">-- Chọn Mã Bất Động Sản --</option>
               {danhSachBDS.map(bds => (
@@ -51,6 +74,26 @@ export default function KyGuiForm({
                 </option>
               ))}
             </select>
+=======
+            <Select
+              showSearch
+              allowClear
+              style={{ ...darkTheme.input, padding: 0, display: 'flex', alignItems: 'center' }}
+              placeholder="🔍 Nhập Địa chỉ BĐS hoặc ID để tìm..."
+              value={formData.bdsid || undefined}
+              onChange={(value) => onChange({ target: { name: 'bdsid', value: value || '' } })}
+              options={danhSachBDS.map(bds => {
+                const bdsName = `${bds.sonha || ''} ${bds.tenduong || ''}`.trim();
+                return {
+                  value: bds.bdsid,
+                  label: bdsName ? `${bdsName} (Mã: ${bds.bdsid})` : `BĐS ${bds.bdsid} - QSDĐ: ${bds.masoqsdd || 'N/A'}`
+                };
+              })}
+              filterOption={(input, option) =>
+                String(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+            />
+>>>>>>> Stashed changes
           </div>
           
           <div style={{marginTop: '15px'}}>
@@ -108,10 +151,15 @@ export default function KyGuiForm({
           <div style={{marginTop: '15px'}}>
             <label style={darkTheme.label}>Trạng Thái:</label>
             <select name="trangthai" value={formData.trangthai} onChange={onChange} style={darkTheme.input}>
+<<<<<<< Updated upstream
               <option value="0">Mới tạo</option>
               <option value="1">Đang hiệu lực</option>
               <option value="2">Đã hết hạn</option>
               <option value="3">Đã hủy</option>
+=======
+              <option value="1">Đang hiệu lực</option>
+            <option value="3">Chấm dứt HĐ</option>
+>>>>>>> Stashed changes
             </select>
           </div>
           

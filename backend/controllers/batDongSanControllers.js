@@ -1,5 +1,10 @@
 const { Op } = require('sequelize');
+<<<<<<< Updated upstream
 const BatDongSan = require('../models/BatDongSan');
+=======
+// SỬA LỖI Ở ĐÂY: Đã thêm chữ "Model" vào đúng tên file thực tế
+const BatDongSan = require('../models/BatDongSanModel'); 
+>>>>>>> Stashed changes
 
 exports.getAllBDS = async (req, res) => {
     try {
