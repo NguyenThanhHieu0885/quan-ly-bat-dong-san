@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-<<<<<<< Updated upstream
 const BatDongSan = require('../models/BatDongSan');
-const bdsController = require('../controllers/batDongSanControllers');
 
 // API lấy danh sách BĐS còn trống (tinhtrang = 0)
 router.get('/', async (req, res) => {
@@ -14,31 +12,6 @@ router.get('/', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Lỗi lấy danh sách BĐS', error: error.message });
     }
-});
-=======
-const bdsController = require('../controllers/batDongSanControllers');
-
-router.get('/', bdsController.getAllBDS);
-router.get('/tra-cuu', bdsController.traCuuBDS);
-router.get('/hinh-anh/:id', bdsController.getHinhAnhBDS);
-router.get('/:id', bdsController.getBDSById);
-router.put('/:id', bdsController.updateBDS); 
->>>>>>> Stashed changes
-
-router.get('/', bdsController.getAllBDS);
-router.get('/tra-cuu', bdsController.traCuuBDS);
-router.get('/hinh-anh/:id', bdsController.getHinhAnhBDS);
-router.get('/:id', bdsController.getBDSById);
-router.put('/:id', bdsController.updateBDS);
-router.delete('/:id', bdsController.deleteBDS);
-
-router.post('/', async (req, res) => {
-  try {
-    const bds = await BatDongSan.create(req.body);
-    res.status(201).json(bds);
-  } catch (error) {
-    res.status(500).json({ message: 'Lỗi thêm BĐS', error: error.message });
-  }
 });
 
 module.exports = router;

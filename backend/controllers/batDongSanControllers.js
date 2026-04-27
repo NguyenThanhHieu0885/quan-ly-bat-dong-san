@@ -1,10 +1,5 @@
 const { Op } = require('sequelize');
-<<<<<<< Updated upstream
 const BatDongSan = require('../models/BatDongSan');
-=======
-// SỬA LỖI Ở ĐÂY: Đã thêm chữ "Model" vào đúng tên file thực tế
-const BatDongSan = require('../models/BatDongSanModel'); 
->>>>>>> Stashed changes
 
 exports.getAllBDS = async (req, res) => {
     try {
@@ -82,15 +77,5 @@ exports.updateBDS = async (req, res) => {
         return res.status(404).json({ message: "Không tìm thấy bất động sản" });
     } catch (error) {
         res.status(500).json({ error: "Lỗi hệ thống khi cập nhật" });
-    }
-};
-
-exports.deleteBDS = async (req, res) => {
-    try {
-        const deleted = await BatDongSan.destroy({ where: { bdsid: req.params.id } });
-        if (!deleted) return res.status(404).json({ message: 'Không tìm thấy BĐS' });
-        res.json({ message: 'Xóa thành công' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
     }
 };

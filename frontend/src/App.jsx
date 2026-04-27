@@ -7,7 +7,6 @@ import QuanLyNhanVien from './pages/QuanLyNhanVien';
 import DanhSachBDS from './pages/DanhSachBDS';      
 import KhachHang from "./pages/khachhang/KhachHang"; 
 import AddKhachHang from "./pages/khachhang/AddKhachHang";
-import FormAddBDS from './pages/FormAddBDS';
 import CreateHopDong from './pages/hopdong/Hopdongdatcoc'; 
 
 import Login from "./pages/auth/Login";
@@ -77,7 +76,7 @@ function App() {
             {/* Thống nhất đường dẫn với AdminLayout */}
             <Route path="bat-dong-san" element={<DanhSachBDS />} />
             <Route path="danh-sach-bds" element={<Navigate to="/bat-dong-san" replace />} /> 
-            <Route path="bat-dong-san/add" element={<FormAddBDS />} />
+            <Route path="bat-dong-san/add" element={<Placeholder title="Thêm Bất Động Sản" />} />
             
             {/* MODULE KÝ GỬI */}
             <Route path="quan-ly-ky-gui" element={<QuanLyKyGui />} />

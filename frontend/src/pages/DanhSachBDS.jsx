@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Input, Space, Card, Typography } from "antd";
-import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import { getBatDongSan, deleteBatDongSan } from "../services/api";
+import { SearchOutlined } from "@ant-design/icons";
+import { getBatDongSan } from "../services/api";
 import FormChiTietBDS from "./FormChiTietBDS";
 import HinhAnhBDS from "./HinhAnhBDS";
 import TraCuuBDS from "./FormTraCuuBDS";
 import FormCapNhatBDS from './FormCapNhatBDS';
 
 const DanhSachBDS = () => {
-  const navigate = useNavigate();
   const [listBDS, setListBDS] = useState([]);
   const [originalListBDS, setOriginalListBDS] = useState([]);
   const [chiTietVisible, setChiTietVisible] = useState(false);
@@ -21,15 +19,15 @@ const DanhSachBDS = () => {
   const [editingRecord, setEditingRecord] = useState(null);
 
   const fetchData = async () => {
-    try {
-      const response = await getBatDongSan();
-      setListBDS(response.data);
-      setOriginalListBDS(response.data);
-      setIsFiltered(false);
-    } catch (error) {
-      console.error("Lỗi lấy dữ liệu:", error);
-    }
-  };
+      try {
+        const response = await getBatDongSan();
+        setListBDS(response.data);
+        setOriginalListBDS(response.data);
+        setIsFiltered(false);
+      } catch (error) {
+        console.error("Lỗi lấy dữ liệu:", error);
+      }
+    };
 
   useEffect(() => {
     const run = async () => {
@@ -46,15 +44,6 @@ const DanhSachBDS = () => {
   const handleEdit = (record) => {
     setEditingRecord(record);
     setIsModalOpen(true);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await deleteBatDongSan(id);
-      fetchData();
-    } catch (error) {
-      console.error("Xóa thất bại:", error);
-    }
   };
 
   const columns = [
@@ -94,18 +83,10 @@ const DanhSachBDS = () => {
           </Button>
 
           <Button
-            style={{
-              backgroundColor: "#ffffff", 
-              border: "2px solid #77d4a9", 
-              borderColor: "#77d4a9"      
-            }}
+            style={{ backgroundColor: "#77d4a9", color: "#000" }} 
             onClick={() => handleEdit(record)}
           >
             Cập nhật
-          </Button>
-          <Button
-            danger onClick={() => handleDelete(record.bdsid)}>
-            Xóa
           </Button>
         </Space>
       ),
@@ -133,21 +114,15 @@ const DanhSachBDS = () => {
                 setIsFiltered(false);
               }}
             >
-              &larr; Quay về danh sách
+              Quay về danh sách
             </Button>
           )}
           <Button
+            type="primary"
             icon={<SearchOutlined />}
             onClick={() => setIsSearchOpen(true)}
           >
             Tra cứu Bất động sản
-          </Button>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => navigate("/bat-dong-san/add")}
-          >
-            Thêm Bất động sản
           </Button>
         </div>
 

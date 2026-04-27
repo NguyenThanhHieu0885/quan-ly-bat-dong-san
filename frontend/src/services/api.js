@@ -2,11 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   // Chọn Port 5000 để khớp với Backend Server
-<<<<<<< Updated upstream
   baseURL: "http://localhost:5000/api", 
-=======
-  baseURL: "http://localhost:3000/api", 
->>>>>>> Stashed changes
 });
 
 // Gắn token tự động vào header cho mọi request
@@ -25,11 +21,5 @@ export const getBatDongSan = () => api.get("/batdongsan");
 
 // Lấy chi tiết 1 BĐS cụ thể
 export const getChiTietBDS = (id) => api.get(`/batdongsan/${id}`);
-
-// Thêm mới BĐS
-export const addBatDongSan = (data) => api.post("/batdongsan", data);
-
-// Xóa BĐS
-export const deleteBatDongSan = (id) => api.delete(`/batdongsan/${id}`);
 
 export default api;

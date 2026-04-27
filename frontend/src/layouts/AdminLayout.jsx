@@ -1,12 +1,8 @@
 import { Layout, Menu, Avatar, Button, Tag, Space, Typography } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { 
-<<<<<<< Updated upstream
   DashboardOutlined, UserOutlined, HomeOutlined, 
   PlusCircleOutlined, FileTextOutlined, 
-=======
-  DashboardOutlined, UserOutlined, HomeOutlined, FileTextOutlined, 
->>>>>>> Stashed changes
   LogoutOutlined, BankOutlined 
 } from "@ant-design/icons";
 
@@ -48,7 +44,6 @@ export default function AdminLayout() {
     { key: "/", icon: <DashboardOutlined />, label: "Tổng quan" },
     { key: "/nhan-vien", icon: <UserOutlined />, label: "Nhân viên", adminonly: true },
     { key: "/khach-hang", icon: <UserOutlined />, label: "Khách hàng" },
-<<<<<<< Updated upstream
     { 
       key: "group-bds", 
       icon: <HomeOutlined />, 
@@ -67,10 +62,6 @@ export default function AdminLayout() {
         { key: "/tao-ky-gui", icon: <PlusCircleOutlined />, label: "Thêm mới" },
       ]
     },
-=======
-    { key: "/bat-dong-san", icon: <HomeOutlined />, label: "Bất động sản" },
-    { key: "/quan-ly-ky-gui", icon: <FileTextOutlined />, label: "HĐ ký gửi" },
->>>>>>> Stashed changes
     { key: "/hop-dong-dat-coc", icon: <FileTextOutlined />, label: "HĐ đặt cọc" },
     { key: "/hop-dong-chuyen-nhuong", icon: <FileTextOutlined />, label: "HĐ chuyển nhượng" },
   ];

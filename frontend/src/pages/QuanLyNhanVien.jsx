@@ -6,12 +6,9 @@ import api from '../services/api';
 import dayjs from 'dayjs';
 
 const QuanLyNhanVien = () => {
-<<<<<<< Updated upstream
   const MIN_EMPLOYEE_AGE = 18;
   const MAX_EMPLOYEE_AGE = 70;
 
-=======
->>>>>>> Stashed changes
   // State và form phục vụ quản lý danh sách, loading, modal và chế độ chỉnh sửa
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -21,7 +18,6 @@ const QuanLyNhanVien = () => {
   const [form] = Form.useForm();
   const [searchForm] = Form.useForm();
 
-<<<<<<< Updated upstream
   // Chỉ cho chọn ngày sinh trong khoảng tuổi hợp lệ
   const disabledBirthDate = (current) => {
     if (!current) return false;
@@ -56,8 +52,6 @@ const QuanLyNhanVien = () => {
     return Promise.resolve();
   };
 
-=======
->>>>>>> Stashed changes
   // Tải danh sách nhân viên (có hỗ trợ tìm kiếm theo keyword)
   const fetchData = async (keyword = "") => {
     setLoading(true);
@@ -91,7 +85,6 @@ const QuanLyNhanVien = () => {
   // Xử lý tra cứu nhân viên theo từ khóa nhập vào
   const handleSearch = async () => {
     try {
-<<<<<<< Updated upstream
       const keyword = searchForm.getFieldValue('keyword') || '';
       const trimmedKeyword = keyword.trim();
 
@@ -102,25 +95,13 @@ const QuanLyNhanVien = () => {
         return;
       }
 
-=======
-      const { keyword } = await searchForm.validateFields();
-      const trimmedKeyword = keyword.trim();
->>>>>>> Stashed changes
       const result = await fetchData(trimmedKeyword);
       if (Array.isArray(result) && result.length === 0) {
         message.warning('Không tìm thấy nhân viên phù hợp.');
       }
       closeSearchModal();
     } catch (error) {
-<<<<<<< Updated upstream
       message.error('Có lỗi xảy ra khi tra cứu.');
-=======
-      if (error?.errorFields) {
-        message.warning('Vui lòng nhập tiêu chí tra cứu!');
-      } else {
-        message.error('Có lỗi xảy ra khi tra cứu.');
-      }
->>>>>>> Stashed changes
     }
   };
 
@@ -260,7 +241,6 @@ const QuanLyNhanVien = () => {
 
           <Row gutter={16}>
             <Col span={12}>
-<<<<<<< Updated upstream
               <Form.Item
                 name="ngaysinh"
                 label="Ngày sinh"
@@ -275,10 +255,6 @@ const QuanLyNhanVien = () => {
                   format="DD/MM/YYYY"
                   disabledDate={disabledBirthDate}
                 />
-=======
-              <Form.Item name="ngaysinh" label="Ngày sinh" rules={[{ required: true, message: 'Vui lòng chọn ngày sinh!' }]}>
-                <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
->>>>>>> Stashed changes
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -347,14 +323,6 @@ const QuanLyNhanVien = () => {
           <Form.Item
             name="keyword"
             label="Thông tin cần tra cứu"
-<<<<<<< Updated upstream
-=======
-            rules={[
-              {
-                validator: (_, value) => (value && value.trim() ? Promise.resolve() : Promise.reject(new Error('Vui lòng nhập tiêu chí tra cứu!'))),
-              },
-            ]}
->>>>>>> Stashed changes
           >
             <Input placeholder="Nhập tên, tài khoản, email..." />
           </Form.Item>

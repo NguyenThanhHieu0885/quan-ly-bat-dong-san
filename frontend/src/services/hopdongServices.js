@@ -1,11 +1,7 @@
 import axios from 'axios';
 
 // Backend chạy ở port 5000, Frontend chạy ở 3000
-<<<<<<< Updated upstream
 const API_BASE_URL = 'http://localhost:5000/api';
-=======
-const API_BASE_URL = 'http://localhost:3000/api';
->>>>>>> Stashed changes
 
 // 1. Tạo hợp đồng đặt cọc
 export const createHopDongDatCoc = async (data) => {
@@ -17,11 +13,7 @@ export const createHopDongDatCoc = async (data) => {
 // 2. Lấy danh sách Bất động sản (để hiển thị lên Select)
 // backend/services/hopdongServices.js
 export const getDanhSachBDS = () => {
-<<<<<<< Updated upstream
     return axios.get('http://localhost:5000/api/batdongsan');
-=======
-    return axios.get('http://localhost:3000/api/batdongsan');
->>>>>>> Stashed changes
 };
 
 // 3. Lấy danh sách Khách hàng
