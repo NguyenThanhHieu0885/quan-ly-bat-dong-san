@@ -10,14 +10,15 @@ const nhanVienRoutes = require('./routes/nhanVienRoutes'); // Hiếu
 const hdChuyenNhuongRoutes = require('./routes/hdChuyenNhuongRoutes'); // Hiếu
 const batDongSanRoutes = require('./routes/batdongsanRoutes'); // Phương Minh
 const khachHangRoutes = require('./routes/khachHangRoutes'); // Lân
-const kyGuiRoutes = require('./routes/kyGuiRoutes'); // Nam (Ký gửi)
+const kyGuiRoutes = require('./routes/hopdongkyguiRoutes'); // Nam (Ký gửi)
 const hopdongdatcocRoutes = require('./routes/hopdongdatcocRoutes'); // Lân (Module mới)
 
 // --- 2. IMPORT CÁC MODELS ĐỂ THIẾT LẬP QUAN HỆ ---
-const HopDongDatCoc = require('./models/HopDongDatCoc');
+const HopDongDatCoc = require('./models/HopDongDatCocModel');
 const BatDongSan = require('./models/BatDongSan');
 const KhachHang = require('./models/KhachHang');
 const NhanVien = require('./models/NhanVien');
+const HopDongKyGui = require('./models/HopDongKyGuiModel');
 
 // --- 3. THIẾT LẬP MỐI QUAN HỆ (ASSOCIATIONS) ---
 // Những dòng này CHỈ bổ sung thêm, không xóa bỏ bất kỳ logic cũ nào
@@ -50,9 +51,7 @@ app.use('/api/nhanvien', nhanVienRoutes);
 app.use('/api/hdchuyennhuong', hdChuyenNhuongRoutes);
 app.use('/api/batdongsan', batDongSanRoutes);
 app.use('/api/khachhang', khachHangRoutes);
-
 app.use('/api/ky-gui', kyGuiRoutes);
-// API Hợp đồng mới của Fen
 app.use('/api/hopdong', hopdongdatcocRoutes);
 
 if (typeof scheduleStatusUpdates === 'function') scheduleStatusUpdates();

@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 const { sequelize } = require('../config/db');
 const KhachHang = require('../models/KhachHang');
 const BatDongSan = require('../models/BatDongSan');
-const HopDongDatCoc = require('../models/HopDongDatCoc');
+const HopDongDatCoc = require('../models/HopDongDatCocModel');
 const HopDongChuyenNhuong = require('../models/HopDongChuyenNhuong');
 // const NhanVien = require('../models/NhanVien'); // Có thể bỏ luôn import này nếu không dùng chỗ khác
 

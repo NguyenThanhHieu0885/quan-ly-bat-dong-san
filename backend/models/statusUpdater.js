@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-const KyGui = require('../models/kyGuiModel');
+const KyGui = require('../models/hopdongkyguiModel');
 
 // Lên lịch chạy công việc vào 00:01 (1 phút sau nửa đêm) mỗi ngày.
 const scheduleStatusUpdates = () => {

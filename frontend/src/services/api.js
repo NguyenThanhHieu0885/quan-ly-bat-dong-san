@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  // Chọn Port 5000 để khớp với Backend Server
-  baseURL: "http://localhost:5000/api", 
+  // Chọn Port 3000 để khớp với Backend Server
+  baseURL: "http://localhost:3000/api", 
 });
 
 // Gắn token tự động vào header cho mọi request

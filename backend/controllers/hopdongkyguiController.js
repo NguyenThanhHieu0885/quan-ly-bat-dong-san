@@ -1,7 +1,7 @@
 const KyGui = require('../models/HopDongKyGuiModel');
-const BatDongSan = require('../models/BatDongSanModel');
-const KhachHang = require('../models/KhachHangModel');
-const NhanVien = require('../models/NhanVienModel');
+const BatDongSan = require('../models/BatDongSan');
+const KhachHang = require('../models/KhachHang');
+const NhanVien = require('../models/NhanVien');
 const HopDongDatCoc = require('../models/HopDongDatCocModel');
 const { Op } = require('sequelize');
 const { sequelize } = require('../config/db');

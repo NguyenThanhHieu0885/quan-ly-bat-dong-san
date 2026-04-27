@@ -42,9 +42,9 @@ const KyGui = sequelize.define('KyGui', {
 
 // Thiết lập quan hệ (Associations)
 // Import các model liên quan để định nghĩa mối quan hệ
-const KhachHang = require('./KhachHangModel');
-const BatDongSan = require('./BatDongSanModel');
-const NhanVien = require('./NhanVienModel');
+const KhachHang = require('./KhachHang');
+const BatDongSan = require('./BatDongSan');
+const NhanVien = require('./NhanVien');
 
 KyGui.belongsTo(KhachHang, { foreignKey: 'khid' });
 KyGui.belongsTo(BatDongSan, { foreignKey: 'bdsid' });

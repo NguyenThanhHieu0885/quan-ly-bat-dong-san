@@ -1,6 +1,6 @@
 const KhachHang = require('../models/KhachHang');
 const BatDongSan = require('../models/BatDongSan'); 
-const HopDongDatCoc = require('../models/HopDongDatCoc');
+const HopDongDatCoc = require('../models/HopDongDatCocModel');
 const { Op, Sequelize } = require('sequelize');
 const dayjs = require('dayjs');
 

@@ -7,7 +7,7 @@ import QuanLyNhanVien from './pages/QuanLyNhanVien';
 import DanhSachBDS from './pages/DanhSachBDS';      
 import KhachHang from "./pages/khachhang/KhachHang"; 
 import AddKhachHang from "./pages/khachhang/AddKhachHang";
-import CreateHopDong from './pages/hopdong/Hopdongdatcoc'; 
+import CreateHopDong from './pages/HopDongDatCoc/Hopdongdatcoc'; 
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";

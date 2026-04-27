@@ -1,8 +1,7 @@
 import { Layout, Menu, Avatar, Button, Tag, Space, Typography } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { 
-  DashboardOutlined, UserOutlined, HomeOutlined, 
-  PlusCircleOutlined, FileTextOutlined, 
+  DashboardOutlined, UserOutlined, HomeOutlined, FileTextOutlined, 
   LogoutOutlined, BankOutlined 
 } from "@ant-design/icons";
 
@@ -44,24 +43,8 @@ export default function AdminLayout() {
     { key: "/", icon: <DashboardOutlined />, label: "Tổng quan" },
     { key: "/nhan-vien", icon: <UserOutlined />, label: "Nhân viên", adminonly: true },
     { key: "/khach-hang", icon: <UserOutlined />, label: "Khách hàng" },
-    { 
-      key: "group-bds", 
-      icon: <HomeOutlined />, 
-      label: "Bất động sản",
-      children: [
-        { key: "/bat-dong-san", label: "Danh sách" },
-        { key: "/bat-dong-san/add", icon: <PlusCircleOutlined />, label: "Thêm mới" },
-      ]
-    },
-    {
-      key: "group-ky-gui",
-      icon: <FileTextOutlined />,
-      label: "HĐ ký gửi",
-      children: [
-        { key: "/quan-ly-ky-gui", label: "Danh sách" },
-        { key: "/tao-ky-gui", icon: <PlusCircleOutlined />, label: "Thêm mới" },
-      ]
-    },
+    { key: "/bat-dong-san", icon: <HomeOutlined />, label: "Bất động sản" },
+    { key: "/quan-ly-ky-gui", icon: <FileTextOutlined />, label: "HĐ ký gửi" },
     { key: "/hop-dong-dat-coc", icon: <FileTextOutlined />, label: "HĐ đặt cọc" },
     { key: "/hop-dong-chuyen-nhuong", icon: <FileTextOutlined />, label: "HĐ chuyển nhượng" },
   ];
