@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Input, Space, Card, Typography } from "antd";
 import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { getBatDongSan } from "../services/api";
+import { getBatDongSan, deleteBatDongSan } from "../services/api";
 import FormChiTietBDS from "./FormChiTietBDS";
 import HinhAnhBDS from "./HinhAnhBDS";
 import TraCuuBDS from "./FormTraCuuBDS";
@@ -21,15 +21,15 @@ const DanhSachBDS = () => {
   const [editingRecord, setEditingRecord] = useState(null);
 
   const fetchData = async () => {
-      try {
-        const response = await getBatDongSan();
-        setListBDS(response.data);
-        setOriginalListBDS(response.data);
-        setIsFiltered(false);
-      } catch (error) {
-        console.error("Lỗi lấy dữ liệu:", error);
-      }
-    };
+    try {
+      const response = await getBatDongSan();
+      setListBDS(response.data);
+      setOriginalListBDS(response.data);
+      setIsFiltered(false);
+    } catch (error) {
+      console.error("Lỗi lấy dữ liệu:", error);
+    }
+  };
 
   useEffect(() => {
     const run = async () => {
@@ -46,6 +46,15 @@ const DanhSachBDS = () => {
   const handleEdit = (record) => {
     setEditingRecord(record);
     setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteBatDongSan(id);
+      fetchData();
+    } catch (error) {
+      console.error("Xóa thất bại:", error);
+    }
   };
 
   const columns = [
@@ -85,10 +94,18 @@ const DanhSachBDS = () => {
           </Button>
 
           <Button
-            style={{ backgroundColor: "#77d4a9", color: "#000" }} 
+            style={{
+              backgroundColor: "#ffffff", 
+              border: "2px solid #77d4a9", 
+              borderColor: "#77d4a9"      
+            }}
             onClick={() => handleEdit(record)}
           >
             Cập nhật
+          </Button>
+          <Button
+            danger onClick={() => handleDelete(record.bdsid)}>
+            Xóa
           </Button>
         </Space>
       ),
