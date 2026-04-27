@@ -84,3 +84,13 @@ exports.updateBDS = async (req, res) => {
         res.status(500).json({ error: "Lỗi hệ thống khi cập nhật" });
     }
 };
+
+exports.deleteBDS = async (req, res) => {
+    try {
+        const deleted = await BatDongSan.destroy({ where: { bdsid: req.params.id } });
+        if (!deleted) return res.status(404).json({ message: 'Không tìm thấy BĐS' });
+        res.json({ message: 'Xóa thành công' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};

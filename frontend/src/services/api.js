@@ -26,4 +26,10 @@ export const getBatDongSan = () => api.get("/batdongsan");
 // Lấy chi tiết 1 BĐS cụ thể
 export const getChiTietBDS = (id) => api.get(`/batdongsan/${id}`);
 
+// Thêm mới BĐS
+export const addBatDongSan = (data) => api.post("/batdongsan", data);
+
+// Xóa BĐS
+export const deleteBatDongSan = (id) => api.delete(`/batdongsan/${id}`);
+
 export default api;
