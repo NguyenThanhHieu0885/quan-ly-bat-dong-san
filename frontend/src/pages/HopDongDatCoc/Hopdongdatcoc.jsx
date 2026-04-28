@@ -72,8 +72,7 @@ const HopdongMain = () => {
     { title: 'Khách hàng', dataIndex: ['KhachHang', 'hoten'] },
     { 
       title: 'Nhân viên lập', 
-      dataIndex: ['NhanVien', 'tennv'], 
-      render: (text) => <Text type="secondary">{text || 'Admin'}</Text> 
+      render: (_, record) => <Text type="secondary">{record.KhachHang?.NhanVien?.tennv || 'Hệ thống'}</Text> 
     },
     { title: 'Tiền cọc', dataIndex: 'giatri', render: v => <b>{v?.toLocaleString()} đ</b> },
     { title: 'Ngày lập', dataIndex: 'ngaylaphd', render: (d) => dayjs(d).format('DD/MM/YYYY') },
@@ -158,7 +157,7 @@ const HopdongMain = () => {
             <Descriptions.Item label="Mã Hợp Đồng"><b>HD{selectedHD.dcid}</b></Descriptions.Item>
             <Descriptions.Item label="Mã HĐ Ký gửi">{selectedHD.kgid ? `HDKG${selectedHD.kgid}` : 'N/A'}</Descriptions.Item>
             <Descriptions.Item label="Nhân viên lập phiếu">
-              <Tag color="blue">{selectedHD.NhanVien?.tennv || 'Hệ thống'}</Tag>
+              <Tag color="blue">{selectedHD.KhachHang?.NhanVien?.tennv || 'Hệ thống'}</Tag>
             </Descriptions.Item>
             <Descriptions.Item label="Bất Động Sản">
               {selectedHD.BatDongSan?.sonha} {selectedHD.BatDongSan?.tenduong}, {selectedHD.BatDongSan?.quan}

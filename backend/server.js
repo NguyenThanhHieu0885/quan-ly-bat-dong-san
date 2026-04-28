@@ -25,6 +25,7 @@ const HopDongKyGui = require('./models/HopDongKyGuiModel');
 HopDongDatCoc.belongsTo(BatDongSan, { foreignKey: 'bdsid' });
 BatDongSan.hasMany(HopDongDatCoc, { foreignKey: 'bdsid' });
 
+
 HopDongDatCoc.belongsTo(KhachHang, { foreignKey: 'khid' });
 KhachHang.hasMany(HopDongDatCoc, { foreignKey: 'khid' });
 

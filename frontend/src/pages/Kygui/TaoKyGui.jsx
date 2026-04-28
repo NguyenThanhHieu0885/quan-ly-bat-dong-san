@@ -79,12 +79,16 @@ export default function TaoKyGui() {
     setLoading(true);
 
     try {
+      // Lấy thông tin user đang đăng nhập từ LocalStorage
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      
       const payload = {
         ...formData,
         giatri: Number(giatriRaw),
         chiphidv: Number(chiphidvRaw),
         // Tránh lỗi MySQL khi chuỗi ngày tháng bị rỗng
-        ngayketthuc: formData.ngayketthuc ? formData.ngayketthuc : null
+        ngayketthuc: formData.ngayketthuc ? formData.ngayketthuc : null,
+        nvid: user.id || null // Tự động gắn mã nhân viên lập HĐ
       };
       await taoKyGuiMoi(payload);
       setFormData({

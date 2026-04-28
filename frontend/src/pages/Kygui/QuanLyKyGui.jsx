@@ -74,7 +74,7 @@ export default function QuanLyKyGui() {
     { title: 'Mã KG', dataIndex: 'kgid', key: 'kgid', sorter: (a, b) => String(a.kgid).localeCompare(String(b.kgid), undefined, { numeric: true }) },
     { title: 'Khách Hàng', dataIndex: ['KhachHang', 'hoten'], key: 'khachhang', sorter: (a, b) => (a.KhachHang?.hoten || '').localeCompare(b.KhachHang?.hoten || '') },
     { title: 'Bất Động Sản', key: 'batdongsan', render: (_, record) => record.BatDongSan ? `${record.BatDongSan.sonha || ''} ${record.BatDongSan.tenduong || ''}`.trim() || record.bdsid : record.bdsid },
-    { title: 'Nhân Viên', dataIndex: ['KhachHang', 'NhanVien', 'tennv'], key: 'nhanvien', render: (text) => text || 'Chưa phân công' },
+    { title: 'Nhân Viên', key: 'nhanvien', render: (_, record) => record.NhanVien?.tennv || record.KhachHang?.NhanVien?.tennv || 'Chưa phân công' },
     { title: 'Giá trị HĐ (VNĐ)', dataIndex: 'giatri', key: 'giatri', align: 'right', render: (text) => formatPrice(text), sorter: (a, b) => a.giatri - b.giatri },
     { title: 'Ngày Bắt Đầu', dataIndex: 'ngaybatdau', key: 'ngaybatdau', render: (text) => formatDate(text) },
     { title: 'Trạng Thái', dataIndex: 'trangthai', key: 'trangthai', render: (status) => { const props = getTrangThaiProps(status); return <Tag color={props.color}>{props.text}</Tag>; }, 
@@ -97,8 +97,9 @@ export default function QuanLyKyGui() {
   ];
 
   const filteredDanhSach = danhSach.filter(item => {
-    const matchSearch = String(item.kgid).toLowerCase().includes(searchTerm.toLowerCase()) || 
-                        (item.KhachHang?.hoten || '').toLowerCase().includes(searchTerm.toLowerCase());
+    const matchSearch = String(item.kgid).toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        (item.KhachHang?.hoten || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        (item.NhanVien?.tennv || item.KhachHang?.NhanVien?.tennv || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchStatus = filterStatus === '' || String(item.trangthai) === filterStatus;
     return matchSearch && matchStatus;
   }).sort((a, b) => {
@@ -147,7 +148,7 @@ export default function QuanLyKyGui() {
         extra={
           <Space>
             <Input
-              placeholder="Tìm mã KG, tên khách hàng..."
+              placeholder="Tìm mã KG, tên khách, nhân viên..."
               prefix={<SearchOutlined />}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -206,7 +207,7 @@ export default function QuanLyKyGui() {
               <strong>{selectedContract.KhachHang?.hoten || 'Chưa cập nhật'}</strong>
             </Descriptions.Item>
             <Descriptions.Item label="Nhân Viên Phụ Trách" span={2}>
-              {selectedContract.KhachHang?.NhanVien?.tennv || 'Chưa phân công'}
+              {selectedContract.NhanVien?.tennv || selectedContract.KhachHang?.NhanVien?.tennv || 'Chưa phân công'}
             </Descriptions.Item>
             <Descriptions.Item label="Bất Động Sản" span={2}>
               {selectedContract.BatDongSan ? `${selectedContract.BatDongSan.sonha || ''} ${selectedContract.BatDongSan.tenduong || ''}`.trim() || selectedContract.bdsid : selectedContract.bdsid}

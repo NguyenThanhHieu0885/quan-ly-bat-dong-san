@@ -1,33 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Input, Space, Card, Typography } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
-import { getBatDongSan } from "../services/api";
+import { Table, Button, Input, Space, Card, Typography, message } from "antd";
+import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { getBatDongSan, deleteBatDongSan } from "../../services/api";
 import FormChiTietBDS from "./FormChiTietBDS";
 import HinhAnhBDS from "./HinhAnhBDS";
 import TraCuuBDS from "./FormTraCuuBDS";
 import FormCapNhatBDS from './FormCapNhatBDS';
 
 const DanhSachBDS = () => {
+  const navigate = useNavigate();
   const [listBDS, setListBDS] = useState([]);
   const [originalListBDS, setOriginalListBDS] = useState([]);
   const [chiTietVisible, setChiTietVisible] = useState(false);
   const [selectedBDSId, setSelectedBDSId] = useState(null);
+  const [selectedBDSRecord, setSelectedBDSRecord] = useState(null);
   const [isImgOpen, setIsImgOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isFiltered, setIsFiltered] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
 
   const fetchData = async () => {
-      try {
-        const response = await getBatDongSan();
-        setListBDS(response.data);
-        setOriginalListBDS(response.data);
-        setIsFiltered(false);
-      } catch (error) {
-        console.error("Lỗi lấy dữ liệu:", error);
-      }
-    };
+    try {
+      const response = await getBatDongSan();
+      const data = Array.isArray(response.data) ? [...response.data].sort((a, b) => a.tinhtrang - b.tinhtrang) : [];
+      setListBDS(data);
+      setOriginalListBDS(data);
+      setIsFiltered(false);
+    } catch (error) {
+      console.error("Lỗi lấy dữ liệu:", error);
+    }
+  };
 
   useEffect(() => {
     const run = async () => {
@@ -36,14 +40,29 @@ const DanhSachBDS = () => {
     run();
   }, []); //
 
-  const handleOpenDetail = (id) => {
-    setSelectedBDSId(id);
+  const handleOpenDetail = (record) => {
+    setSelectedBDSId(record.bdsid);
+    setSelectedBDSRecord(record);
     setChiTietVisible(true);
   };
 
   const handleEdit = (record) => {
     setEditingRecord(record);
     setIsModalOpen(true);
+  };
+
+  const handleDelete = async (record) => {
+    if (record.tinhtrang === 1) {
+      message.warning("Không thể xóa căn đã đặt cọc");
+      return;
+    }
+
+    try {
+      await deleteBatDongSan(record.bdsid);
+      fetchData();
+    } catch (error) {
+      console.error("Xóa thất bại:", error);
+    }
   };
 
   const columns = [
@@ -65,28 +84,32 @@ const DanhSachBDS = () => {
       render: (val) => `${val?.toLocaleString()} VNĐ`,
     },
     {
+      title: "Tình trạng",
+      dataIndex: "tinhtrang",
+      key: "tinhtrang",
+      render: (val) => (val === 0 ? "Còn trống" : "Đặt cọc"),
+    },
+    {
       title: "Thao tác",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleOpenDetail(record.bdsid)}>
+          <Button onClick={() => handleOpenDetail(record)}>
             Xem chi tiết
           </Button>
 
           <Button
-            onClick={() => {
-              setSelectedBDSId(record.bdsid);
-              setIsImgOpen(true);
+            style={{
+              backgroundColor: "#ffffff", 
+              border: "2px solid #77d4a9", 
+              borderColor: "#77d4a9"      
             }}
-          >
-            Xem hình
-          </Button>
-
-          <Button
-            style={{ backgroundColor: "#77d4a9", color: "#000" }} 
             onClick={() => handleEdit(record)}
           >
             Cập nhật
+          </Button>
+          <Button danger onClick={() => handleDelete(record)}>
+            Xóa
           </Button>
         </Space>
       ),
@@ -103,6 +126,7 @@ const DanhSachBDS = () => {
           style={{
             display: "flex",
             justifyContent: "flex-end",
+            flexWrap: "wrap",
             gap: 10,
             marginBottom: 20,
           }}
@@ -114,15 +138,21 @@ const DanhSachBDS = () => {
                 setIsFiltered(false);
               }}
             >
-              Quay về danh sách
+              &larr; Quay về danh sách
             </Button>
           )}
           <Button
-            type="primary"
             icon={<SearchOutlined />}
             onClick={() => setIsSearchOpen(true)}
           >
             Tra cứu Bất động sản
+          </Button>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => navigate("/bat-dong-san/add")}
+          >
+            Thêm Bất động sản
           </Button>
         </div>
 
@@ -136,7 +166,7 @@ const DanhSachBDS = () => {
 
       {/* Form chi tiết bất động sản */}
       <FormChiTietBDS
-        bdsId={selectedBDSId}
+        record={selectedBDSRecord}
         visible={chiTietVisible}
         onCancel={() => setChiTietVisible(false)}
       />

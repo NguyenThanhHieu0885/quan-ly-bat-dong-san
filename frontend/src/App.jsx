@@ -4,10 +4,11 @@ import AdminLayout from "./layouts/AdminLayout";
 
 // --- 1. IMPORT CÁC TRANG QUẢN LÝ ---
 import QuanLyNhanVien from './pages/QuanLyNhanVien'; 
-import DanhSachBDS from './pages/DanhSachBDS';      
+import DanhSachBDS from './pages/BatDongSan/DanhSachBDS';      
 import KhachHang from "./pages/khachhang/KhachHang"; 
 import AddKhachHang from "./pages/khachhang/AddKhachHang";
-import CreateHopDong from './pages/HopDongDatCoc/Hopdongdatcoc'; 
+import CreateHopDong from './pages/HopDongDatCoc/Hopdongdatcoc';
+import AddHopdongDatCoc from './pages/HopDongDatCoc/AddHopdongDatCoc';
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -17,7 +18,8 @@ import TaoKyGui from './pages/kygui/TaoKyGui';
 import QuanLyKyGui from './pages/kygui/QuanLyKyGui';
 import SuaKyGui from './pages/kygui/SuaKyGui';
 import HopDongChuyenNhuong from "./pages/HopDongChuyenNhuong";
-
+import { addBatDongSan } from "./services/api";
+import FormAddBDS from "./pages/BatDongSan/FormAddBDS";
 // --- 2. AUTH CHECK (Dùng bản feat cho bảo mật) ---
 const isAuthenticated = () => !!localStorage.getItem("user"); 
 const getRole = () => {
@@ -76,7 +78,7 @@ function App() {
             {/* Thống nhất đường dẫn với AdminLayout */}
             <Route path="bat-dong-san" element={<DanhSachBDS />} />
             <Route path="danh-sach-bds" element={<Navigate to="/bat-dong-san" replace />} /> 
-            <Route path="bat-dong-san/add" element={<Placeholder title="Thêm Bất Động Sản" />} />
+            <Route path="bat-dong-san/add" element={<FormAddBDS />} />
             
             {/* MODULE KÝ GỬI */}
             <Route path="quan-ly-ky-gui" element={<QuanLyKyGui />} />
@@ -87,6 +89,7 @@ function App() {
             {/* CÁC HỢP ĐỒNG KHÁC */}
             <Route path="hop-dong-chuyen-nhuong" element={<HopDongChuyenNhuong />} />
             <Route path="hop-dong-dat-coc" element={<CreateHopDong />} />
+            <Route path="hop-dong-dat-coc/add" element={<AddHopdongDatCoc />} />
           </Route>
 
           {/* FALLBACK */}

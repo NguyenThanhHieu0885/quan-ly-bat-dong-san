@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Input, Button, message } from 'antd';
-import api from '../services/api';
+import api from '../../services/api';
 
 const TraCuuBDS = ({ visible, onCancel, onSearchSuccess }) => {
   const [keyword, setKeyword] = useState('');
@@ -42,7 +42,7 @@ const TraCuuBDS = ({ visible, onCancel, onSearchSuccess }) => {
       <div style={{ padding: '20px 0' }}>
         <p>Nhập thông tin BĐS cần tra cứu (Mã số QSDĐ hoặc Tên đường):</p>
         <Input 
-          placeholder="Ví dụ: QSD12345 hoặc Cách Mạng Tháng 8..." 
+          placeholder="Ví dụ: QSD123 hoặc Cách Mạng Tháng 8..." 
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           onPressEnter={handleSearch}

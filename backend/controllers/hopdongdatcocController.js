@@ -1,6 +1,7 @@
 const dayjs = require('dayjs');
 const { Op } = require('sequelize');
 const { sequelize } = require('../config/db');
+const NhanVien = require('../models/NhanVien');
 const KhachHang = require('../models/KhachHang');
 const BatDongSan = require('../models/BatDongSan');
 const HopDongDatCoc = require('../models/HopDongDatCocModel');
@@ -93,7 +94,13 @@ exports.getAllHopDong = async (req, res) => {
                 },
                 { 
                     model: KhachHang, 
-                    attributes: ['hoten','sdt'] 
+                    attributes: ['hoten','sdt'],
+                    include: [
+                        { 
+                            model: NhanVien, 
+                            attributes: ['tennv'] 
+                        }
+                    ]
                 }
             ],
             order: [['dcid', 'ASC']]

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, InputNumber, Select, Button, Card, Typography, Row, Col, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import { addBatDongSan } from "../services/api";
+import api, { addBatDongSan } from "../../services/api";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -9,13 +9,61 @@ const { TextArea } = Input;
 const TINH_TRANG_OPTIONS = [
   { value: 0, label: "Còn trống" },
   { value: 1, label: "Đã đặt cọc" },
-  { value: 2, label: "Đã bán" },
 ];
+
+const generateRandomCode = () => {
+  const randomNumber = Math.floor(Math.random() * 999) + 1;
+  return `QSD${randomNumber}`;
+};
+
+const generateUniqueCode = (existingCodes) => {
+  const usedCodes = new Set(existingCodes.map((code) => String(code).toUpperCase()));
+  let code = generateRandomCode();
+  let attempts = 0;
+  while (usedCodes.has(code.toUpperCase()) && attempts < 1000) {
+    code = generateRandomCode();
+    attempts += 1;
+  }
+  return code;
+};
 
 export default function ThemBDS() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  const handleValuesChange = (changedValues, allValues) => {
+    const chieudai = Number(allValues.chieudai);
+    const chieurong = Number(allValues.chieurong);
+    if (!Number.isNaN(chieudai) && !Number.isNaN(chieurong) && chieudai > 0 && chieurong > 0) {
+      form.setFieldsValue({ dientich: chieudai * chieurong });
+    } else {
+      form.setFieldsValue({ dientich: undefined });
+    }
+  };
+
+  useEffect(() => {
+    const loadUniqueCode = async () => {
+      try {
+        let response;
+        try {
+          response = await api.get("/batdongsan/danhsach");
+        } catch (err) {
+          response = await api.get("/batdongsan");
+        }
+
+        const existingCodes = Array.isArray(response.data)
+          ? response.data.map((item) => item.masoqsdd).filter(Boolean)
+          : [];
+        const newCode = generateUniqueCode(existingCodes);
+        form.setFieldsValue({ masoqsdd: newCode });
+      } catch (error) {
+        form.setFieldsValue({ masoqsdd: generateRandomCode() });
+      }
+    };
+
+    loadUniqueCode();
+  }, [form]);
 
   const handleSubmit = async (values) => {
     setLoading(true);
@@ -34,27 +82,27 @@ export default function ThemBDS() {
     <div style={{ padding: "24px", background: "#f5f5f5", minHeight: "100vh" }}>
       <Card>
         <Title level={2}>Thêm Bất Động Sản</Title>
-        <Form form={form} layout="vertical" onFinish={handleSubmit}>
+        <Form form={form} layout="vertical" onFinish={handleSubmit} onValuesChange={handleValuesChange}>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label="Mã số QSDĐ" name="masoqsdd" rules={[{ required: true, message: "Vui lòng nhập mã số QSDĐ" }]}>
-                <Input placeholder="Nhập mã số QSDĐ" />
+              <Form.Item label="Mã số QSDĐ" name="masoqsdd" rules={[{ required: true, message: "Mã số QSDĐ đang được tự tạo" }]}>
+                <Input disabled />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Tình trạng" name="tinhtrang" initialValue={0}>
-                <Select options={TINH_TRANG_OPTIONS} />
+              <Form.Item name="tinhtrang" initialValue={0} hidden>
+                <Input />
+              </Form.Item>
+              <Form.Item label="Tình trạng">
+                <Input value="Còn trống" disabled />
               </Form.Item>
             </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={8}>
-              <Form.Item label="Số nhà" name="sonha">
+            <Col span={12}>
+              <Form.Item label="Số nhà" name="tenduong" rules={[{ required: true, message: "Vui lòng nhập số nhà" }]}>
                 <Input placeholder="Số nhà" />
               </Form.Item>
             </Col>
-            <Col span={16}>
+            <Col span={12}>
               <Form.Item label="Tên đường" name="tenduong" rules={[{ required: true, message: "Vui lòng nhập tên đường" }]}>
                 <Input placeholder="Tên đường" />
               </Form.Item>
@@ -63,17 +111,17 @@ export default function ThemBDS() {
 
           <Row gutter={16}>
             <Col span={8}>
-              <Form.Item label="Phường/Xã" name="phuong">
+              <Form.Item label="Phường/Xã" name="phuong" rules={[{ required: true, message: "Vui lòng nhập tên phường/xã" }]}>
                 <Input placeholder="Phường/Xã" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item label="Quận/Huyện" name="quan">
+              <Form.Item label="Quận/Huyện" name="quan" rules={[{ required: true, message: "Vui lòng nhập quận/huyện" }]}>
                 <Input placeholder="Quận/Huyện" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item label="Thành phố" name="thanhpho">
+              <Form.Item label="Thành phố" name="thanhpho" rules={[{ required: true, message: "Vui lòng nhập thành phố" }]}>
                 <Input placeholder="Thành phố" />
               </Form.Item>
             </Col>
@@ -81,18 +129,18 @@ export default function ThemBDS() {
 
           <Row gutter={16}>
             <Col span={8}>
-              <Form.Item label="Diện tích (m²)" name="dientich" rules={[{ required: true, message: "Vui lòng nhập diện tích" }]}>
-                <InputNumber min={0} style={{ width: "100%" }} placeholder="m²" />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item label="Chiều dài (m)" name="chieudai" rules={[{ required: true, message: "Vui lòng nhập chiều dài" }]}>
+              <Form.Item label="Chiều dài (m)" name="chieudai" rules={[{ required: true, message: "Vui lòng nhập chiều dài" }]}> 
                 <InputNumber min={0} style={{ width: "100%" }} placeholder="m" />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item label="Chiều rộng (m)" name="chieurong" rules={[{ required: true, message: "Vui lòng nhập chiều rộng" }]}>
+              <Form.Item label="Chiều rộng (m)" name="chieurong" rules={[{ required: true, message: "Vui lòng nhập chiều rộng" }]}> 
                 <InputNumber min={0} style={{ width: "100%" }} placeholder="m" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="Diện tích (m²)" name="dientich">
+                <InputNumber min={0} style={{ width: "100%" }} placeholder="m²" disabled />
               </Form.Item>
             </Col>
           </Row>

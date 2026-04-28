@@ -18,7 +18,7 @@ const getKyGuis = async (req, res) => {
         { model: BatDongSan },
         { 
           model: KhachHang, 
-          attributes: ['khid', 'hoten'],
+          attributes: ['khid', 'hoten', 'nvid'],
           include: [{ model: NhanVien, attributes: ['nvid', 'tennv'] }] 
         }
       ]
@@ -71,7 +71,7 @@ const getKyGuiById = async (req, res) => {
         { model: BatDongSan }, 
         { 
           model: KhachHang, 
-          attributes: ['khid', 'hoten'],
+          attributes: ['khid', 'hoten', 'nvid'],
           include: [{ model: NhanVien, attributes: ['nvid', 'tennv'] }]
         }
       ]

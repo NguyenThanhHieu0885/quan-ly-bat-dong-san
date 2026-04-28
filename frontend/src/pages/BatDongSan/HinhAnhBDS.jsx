@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Image, Spin, Empty } from 'antd';
-import api from '../services/api';
+import api from '../../services/api';
 
 const HinhAnhBDS = ({ bdsId, visible, onCancel }) => {
   const [imgSrc, setImgSrc] = useState(null);
